@@ -1,0 +1,19 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "module for rss-agrigator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bobrov-site/frontend-project-11.git"
+  },
+  "author": "Daniil Bobrov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bobrov-site/frontend-project-11/issues"
+  },
+  "homepage": "https://github.com/bobrov-site/frontend-project-11#readme"
+}
