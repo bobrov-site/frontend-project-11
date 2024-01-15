@@ -1,10 +1,6 @@
 install:
 	npm ci
-lint:
+fix:
 	npx eslint .
-fix: 
-	npx eslint --fix .
-test:
-	npm test
-test-coverage:
-	npm test -- --coverage --coverageProvider=v8
+serve:
+	npx webpack serve
