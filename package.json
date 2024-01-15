@@ -12,6 +12,7 @@
   },
   "author": "Daniil Bobrov",
   "license": "ISC",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/bobrov-site/frontend-project-11/issues"
   },
