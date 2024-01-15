@@ -1,6 +1,8 @@
 install:
 	npm ci
-fix:
+fix: 
+	npx eslint --fix .
+lint:
 	npx eslint .
 serve:
 	npx webpack serve
