@@ -1,15 +1,6 @@
-# 🚀 Welcome to your new awesome project!
+### Hexlet tests and linter status:
+[![Actions Status](https://github.com/bobrov-site/frontend-project-11/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/bobrov-site/frontend-project-11/actions)
 
-This project has been created using **webpack-cli**, you can now run
+![nodejs workflow](https://github.com/bobrov-site/frontend-project-11/actions/workflows/nodejs.yml/badge.svg)
 
-```
-npm run build
-```
-
-or
-
-```
-yarn build
-```
-
-to bundle your application
+[![Maintainability](https://api.codeclimate.com/v1/badges/92ea574d86b929b45b52/maintainability)](https://codeclimate.com/github/bobrov-site/frontend-project-11/maintainability)
