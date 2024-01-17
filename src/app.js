@@ -27,6 +27,7 @@ const generateSchema = () => {
 
 const watchedState = onChange(state, view(state));
 export default (() => {
+  state.elements.input.focus();
   state.elements.form.addEventListener('submit', ((event) => {
     event.preventDefault();
     const url = new FormData(event.target).get('url');
