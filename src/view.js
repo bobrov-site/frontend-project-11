@@ -1,10 +1,11 @@
 const renderError = (state, message) => {
+  const { elements } = state;
   if (message) {
-    state.elements.feedback.innerHTML = message;
-    state.elements.input.classList.add('is-invalid');
+    elements.feedback.innerHTML = message;
+    elements.input.classList.add('is-invalid');
   } else {
-    state.elements.feedback.innerHTML = '';
-    state.elements.input.classList.remove('is-invalid');
+    elements.feedback.innerHTML = '';
+    elements.input.classList.remove('is-invalid');
   }
 };
 
