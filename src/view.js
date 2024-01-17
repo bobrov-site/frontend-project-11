@@ -6,12 +6,15 @@ const renderError = (state, message) => {
   } else {
     elements.feedback.innerHTML = '';
     elements.input.classList.remove('is-invalid');
+    elements.input.value = '';
+    elements.input.focus();
   }
 };
 
 export default (state) => (path, value) => {
   if (path === 'feeds') {
-    console.log(state);
+    state.elements.input.value = '';
+    state.elements.input.focus();
   }
   if (path === 'form.error') {
     renderError(state, value);
