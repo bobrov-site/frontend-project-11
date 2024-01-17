@@ -11,6 +11,7 @@ const state = {
   elements: {
     form: document.querySelector('.rss-form'),
     input: document.getElementById('url-input'),
+    feedback: document.querySelector('.feedback'),
   },
   feeds: [],
   posts: [],
@@ -30,7 +31,7 @@ export default (() => {
     event.preventDefault();
     const url = new FormData(event.target).get('url');
     generateSchema().validate({ url }).then((response) => {
-      console.log(response, 'res');
+      watchedState.form.error = '';
     })
       .catch((e) => {
         watchedState.form.error = e.message;
