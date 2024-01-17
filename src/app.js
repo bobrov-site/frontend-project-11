@@ -30,8 +30,14 @@ export default (() => {
   state.elements.form.addEventListener('submit', ((event) => {
     event.preventDefault();
     const url = new FormData(event.target).get('url');
-    generateSchema().validate({ url }).then((response) => {
+    generateSchema().validate({ url }).then(() => {
       watchedState.form.error = '';
+      axios.get(url).then((response) => {
+        watchedState.feeds.push({ url, data: response.data });
+      })
+        .catch((e) => {
+          console.log(e, 'error axios');
+        });
     })
       .catch((e) => {
         watchedState.form.error = e.message;
