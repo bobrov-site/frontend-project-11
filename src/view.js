@@ -1,7 +1,4 @@
-const watchedState = onChange(state, (path, value) => {
-    
-})
-
-export default (() => {
-
-});
+export default (state) => (path, value) => {
+  console.log(state, 'view');
+  console.log(path, value);
+};
