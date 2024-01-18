@@ -28,34 +28,36 @@ const generateSchema = () => {
   });
 };
 
-const watchedState = onChange(state, view(state));
-
 export default (() => {
   const i18nextInstance = i18next.createInstance();
   i18nextInstance.init({
-    lng: 'ru',
     debug: true,
+    lng: 'ru',
     resourses,
-  });
-  state.elements.input.focus();
-  state.elements.form.addEventListener('submit', ((event) => {
-    event.preventDefault();
-    const url = new FormData(event.target).get('url');
-    generateSchema().validate({ url }).then(() => {
-      watchedState.form.isValid = true;
-      watchedState.form.error = '';
-      axios.get(url).then((response) => {
-        watchedState.feeds.push({ url, data: response.data });
-      })
-        .catch((e) => {
-          console.log(e, 'error axios');
-        });
-    })
-      .catch((e) => {
-        watchedState.form.isValid = false;
-        watchedState.form.error = i18nextInstance.t(e.message);
-      });
-  }));
+  })
+    .then(() => {
+      const watchedState = onChange(state, view(state));
+      state.elements.input.focus();
+      state.elements.form.addEventListener('submit', ((event) => {
+        event.preventDefault();
+        const url = new FormData(event.target).get('url');
+        generateSchema().validate({ url }).then(() => {
+          watchedState.form.isValid = true;
+          watchedState.form.error = '';
+          axios.get(url)
+            .then((response) => {
+              watchedState.feeds.push({ url, data: response.data });
+            })
+            .catch((e) => {
+              console.log(e, 'error axios');
+            });
+          })
+          .catch((e) => {
+            watchedState.form.isValid = false;
+            watchedState.form.error = i18next.t(e.message);
+          });
+      }));
+    });
 });
 
 // https://lorem-rss.hexlet.app/feed
