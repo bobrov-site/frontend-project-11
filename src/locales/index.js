@@ -1,9 +1,3 @@
-const resourses = {
-    translation: {
-        error_wrong_link: 'Неверная ссылка',
-        error_required: 'Это поле обязательно для заполнения',
-        error_not_unique: 'RSS уже существует',
-    }
-}
+import ru from './ru.js';
 
-export default resourses;
+export default { ru };
