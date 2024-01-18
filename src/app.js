@@ -1,8 +1,8 @@
 import onChange from 'on-change';
 import axios from 'axios';
 import * as yup from 'yup';
-import view from './view.js';
 import i18next from 'i18next';
+import view from './view.js';
 import resourses from './locales/index.js';
 
 const state = {
