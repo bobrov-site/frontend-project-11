@@ -54,7 +54,7 @@ export default (() => {
           })
           .catch((e) => {
             watchedState.form.isValid = false;
-            watchedState.form.error = i18next.t(e.message);
+            watchedState.form.error = i18nextInstance.t(e.message);
           });
       }));
     });
