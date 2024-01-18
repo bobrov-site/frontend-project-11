@@ -1,7 +1,7 @@
-const renderError = (state, message) => {
-  const { elements } = state;
-  if (message) {
-    elements.feedback.innerHTML = message;
+const renderError = (state) => {
+  const { elements, form } = state;
+  if (!form.isValid) {
+    elements.feedback.innerHTML = form.error;
     elements.input.classList.add('is-invalid');
   } else {
     elements.feedback.innerHTML = '';
@@ -17,6 +17,6 @@ export default (state) => (path, value) => {
     state.elements.input.focus();
   }
   if (path === 'form.error') {
-    renderError(state, value);
+    renderError(state);
   }
 };
