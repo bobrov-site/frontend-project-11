@@ -2,11 +2,14 @@ import onChange from 'on-change';
 import axios from 'axios';
 import * as yup from 'yup';
 import view from './view.js';
+import i18next from 'i18next';
+import resourses from './locales/index.js';
 
 const state = {
   form: {
     process: 'filling',
     error: '',
+    isValid: true,
   },
   elements: {
     form: document.querySelector('.rss-form'),
@@ -21,17 +24,25 @@ const state = {
 const generateSchema = () => {
   const urlsList = state.feeds.map((feed) => feed.url);
   return yup.object({
-    url: yup.string().url('Неверная ссылка').required('Обязательное поле').notOneOf(urlsList, 'RSS уже существует'),
+    url: yup.string().url('errorWrongLink').required('errorRequired').notOneOf(urlsList, 'errorNowUnique'),
   });
 };
 
 const watchedState = onChange(state, view(state));
+
 export default (() => {
+  const i18nextInstance = i18next.createInstance();
+  i18nextInstance.init({
+    lng: 'ru',
+    debug: true,
+    resourses,
+  });
   state.elements.input.focus();
   state.elements.form.addEventListener('submit', ((event) => {
     event.preventDefault();
     const url = new FormData(event.target).get('url');
     generateSchema().validate({ url }).then(() => {
+      watchedState.form.isValid = true;
       watchedState.form.error = '';
       axios.get(url).then((response) => {
         watchedState.feeds.push({ url, data: response.data });
@@ -41,7 +52,8 @@ export default (() => {
         });
     })
       .catch((e) => {
-        watchedState.form.error = e.message;
+        watchedState.form.isValid = false;
+        watchedState.form.error = i18nextInstance.t(e.message);
       });
   }));
 });
