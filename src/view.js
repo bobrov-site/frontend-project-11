@@ -11,7 +11,7 @@ const renderError = (state) => {
   }
 };
 
-export default (state) => (path, value) => {
+export default (state, i18nextInstance) => (path, value) => {
   if (path === 'feeds') {
     state.elements.input.value = '';
     state.elements.input.focus();

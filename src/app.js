@@ -3,7 +3,7 @@ import axios from 'axios';
 import * as yup from 'yup';
 import i18next from 'i18next';
 import view from './view.js';
-import resourses from './locales/index.js';
+import ru from './locales/ru.js';
 
 const state = {
   form: {
@@ -33,31 +33,31 @@ export default (() => {
   i18nextInstance.init({
     debug: true,
     lng: 'ru',
-    resourses,
-  })
-    .then(() => {
-      const watchedState = onChange(state, view(state));
-      state.elements.input.focus();
-      state.elements.form.addEventListener('submit', ((event) => {
-        event.preventDefault();
-        const url = new FormData(event.target).get('url');
-        generateSchema().validate({ url }).then(() => {
-          watchedState.form.isValid = true;
-          watchedState.form.error = '';
-          axios.get(url)
-            .then((response) => {
-              watchedState.feeds.push({ url, data: response.data });
-            })
-            .catch((e) => {
-              console.log(e, 'error axios');
-            });
-          })
-          .catch((e) => {
-            watchedState.form.isValid = false;
-            watchedState.form.error = i18nextInstance.t(e.message);
-          });
-      }));
-    });
+    resources: {
+      ru,
+    },
+  });
+  const watchedState = onChange(state, view(state, i18nextInstance));
+  state.elements.input.focus();
+  state.elements.form.addEventListener('submit', ((event) => {
+    event.preventDefault();
+    const url = new FormData(event.target).get('url');
+    generateSchema().validate({ url }).then(() => {
+      watchedState.form.isValid = true;
+      watchedState.form.error = '';
+      axios.get(url)
+        .then((response) => {
+          watchedState.feeds.push({ url, data: response.data });
+        })
+        .catch((e) => {
+          console.log(e, 'error axios');
+        });
+    })
+      .catch((e) => {
+        watchedState.form.isValid = false;
+        watchedState.form.error = i18nextInstance.t(e.message);
+      });
+  }));
 });
 
 // https://lorem-rss.hexlet.app/feed
