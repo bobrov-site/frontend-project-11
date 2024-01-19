@@ -11,10 +11,14 @@ const state = {
     error: '',
     isValid: true,
   },
+  sendButton: {
+    isDisabled: false,
+  },
   elements: {
     form: document.querySelector('.rss-form'),
     input: document.getElementById('url-input'),
     feedback: document.querySelector('.feedback'),
+    sendButton: document.querySelector('[type="submit"]'),
   },
   feeds: [],
   posts: [],
@@ -40,6 +44,7 @@ export default (() => {
   const watchedState = onChange(state, view(state, i18nextInstance));
   state.elements.input.focus();
   state.elements.form.addEventListener('submit', ((event) => {
+    watchedState.sendButton.isDisabled = true;
     event.preventDefault();
     const url = new FormData(event.target).get('url');
     generateSchema().validate({ url }).then(() => {
@@ -50,11 +55,13 @@ export default (() => {
           watchedState.feeds.push({ url, data: response.data });
         })
         .catch((e) => {
+          watchedState.sendButton.isDisabled = false;
           console.log(e, 'error axios');
         });
     })
       .catch((e) => {
         watchedState.form.isValid = false;
+        watchedState.sendButton.isDisabled = false;
         watchedState.form.error = i18nextInstance.t(e.message);
       });
   }));
