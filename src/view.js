@@ -11,6 +11,15 @@ const renderError = (state) => {
   }
 };
 
+const disableSendButton = (state) => {
+  const { elements, sendButton } = state;
+  if (sendButton.isDisabled) {
+    elements.sendButton.setAttribute('disabled', '');
+  } else {
+    elements.sendButton.removeAttribute('disabled');
+  }
+}
+
 export default (state, i18nextInstance) => (path, value) => {
   if (path === 'feeds') {
     state.elements.input.value = '';
@@ -18,5 +27,8 @@ export default (state, i18nextInstance) => (path, value) => {
   }
   if (path === 'form.error') {
     renderError(state);
+  }
+  if (path === 'sendButton.isDisabled') {
+    disableSendButton(state);
   }
 };
