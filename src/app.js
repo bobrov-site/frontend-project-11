@@ -22,6 +22,8 @@ const state = {
     input: document.getElementById('url-input'),
     feedback: document.querySelector('.feedback'),
     sendButton: document.querySelector('[type="submit"]'),
+    feedsColumn: document.querySelector('.feeds'),
+    postsColumn: document.querySelector('.posts'),
   },
   feeds: [],
   posts: [],
