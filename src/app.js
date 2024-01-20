@@ -35,12 +35,13 @@ const generateSchema = () => {
   });
 };
 
-const generateFeed = (parsedData) => {
+const generateFeed = (parsedData, url) => {
   const feed = {};
   const id = Date.now();
   const title = parsedData.querySelector('title');
   const description = parsedData.querySelector('description');
   feed.id = id;
+  feed.url = url;
   feed.title = title.innerHTML.replace('<![CDATA[', '').replace(']]>', '');
   feed.description = description.innerHTML.replace('<![CDATA[', '').replace(']]>', '');
   return feed;
@@ -90,14 +91,16 @@ export default (() => {
           return parsedData;
         })
         .then((parsedData) => {
-          const feed = generateFeed(parsedData);
+          const feed = generateFeed(parsedData, url);
           const posts = generatePosts(parsedData, feed.id);
           watchedState.form.isValid = true;
           watchedState.form.error = '';
           watchedState.form.process = 'processed';
           watchedState.sendButton.isDisabled = false;
-          // watchedState.feeds.push({ url, data: response.data });
           console.log(feed, posts, 'feed and posts');
+          watchedState.feeds.unshift(feed);
+          watchedState.posts.unshift(posts);
+          console.log(state, 'state');
         })
         .catch(() => {
           watchedState.form.isValid = false;
