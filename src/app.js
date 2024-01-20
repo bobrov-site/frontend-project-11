@@ -6,6 +6,8 @@ import view from './view.js';
 import ru from './locales/ru.js';
 import parse from './parse.js';
 
+// filling, processing, processed, failed
+
 const state = {
   form: {
     process: 'filling',
@@ -39,8 +41,8 @@ const generateFeed = (parsedData) => {
   const title = parsedData.querySelector('title');
   const description = parsedData.querySelector('description');
   feed.id = id;
-  feed.title = title.innerHTML.replace("<![CDATA[", "").replace("]]>", "")
-  feed.description = description.innerHTML.replace("<![CDATA[", "").replace("]]>", "");
+  feed.title = title.innerHTML.replace('<![CDATA[', '').replace(']]>', '');
+  feed.description = description.innerHTML.replace('<![CDATA[', '').replace(']]>', '');
   return feed;
 };
 
@@ -54,9 +56,9 @@ const generatePosts = (parsedData, feedId) => {
     const link = item.querySelector('link');
     const description = item.querySelector('description');
     const pubDate = item.querySelector('pubDate');
-    post.title = title.innerHTML.replace("<![CDATA[", "").replace("]]>", "");
-    post.link = link.innerHTML.replace("<![CDATA[", "").replace("]]>", "");
-    post.description = description.innerHTML.replace("<![CDATA[", "").replace("]]>", "");
+    post.title = title.innerHTML.replace('<![CDATA[', '').replace(']]>', '');
+    post.link = link.innerHTML.replace('<![CDATA[', '').replace(']]>', '');
+    post.description = description.innerHTML.replace('<![CDATA[', '').replace(']]>', '');
     post.pubDate = pubDate.innerHTML;
     post.id = id;
     post.feedId = feedId;
@@ -77,6 +79,7 @@ export default (() => {
   const watchedState = onChange(state, view(state, i18nextInstance));
   state.elements.input.focus();
   state.elements.form.addEventListener('submit', ((event) => {
+    watchedState.form.process = 'filling';
     watchedState.sendButton.isDisabled = true;
     event.preventDefault();
     const url = new FormData(event.target).get('url');
@@ -85,25 +88,29 @@ export default (() => {
         .then((response) => {
           const parsedData = parse(response.data.contents);
           return parsedData;
-          // watchedState.feeds.push({ url, data: response.data });
-        }).then((parsedData) => {
+        })
+        .then((parsedData) => {
           const feed = generateFeed(parsedData);
           const posts = generatePosts(parsedData, feed.id);
           watchedState.form.isValid = true;
           watchedState.form.error = '';
+          watchedState.form.process = 'processed';
           watchedState.sendButton.isDisabled = false;
+          // watchedState.feeds.push({ url, data: response.data });
           console.log(feed, posts, 'feed and posts');
         })
-        .catch((e) => {
+        .catch(() => {
           watchedState.form.isValid = false;
+          watchedState.form.error = i18nextInstance.t('errorResourceNotValid');
+          watchedState.form.process = 'failed';
           watchedState.sendButton.isDisabled = false;
-          watchedState.form.error = i18nextInstance.t(e.code === 'ERR_BAD_REQUEST' ? 'errorBadRequest' : e.message);
         });
     })
       .catch((e) => {
         watchedState.form.isValid = false;
-        watchedState.sendButton.isDisabled = false;
         watchedState.form.error = i18nextInstance.t(e.message);
+        watchedState.form.process = 'failed';
+        watchedState.sendButton.isDisabled = false;
       });
   }));
 });
