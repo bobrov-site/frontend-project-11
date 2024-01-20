@@ -1,11 +1,18 @@
 const renderError = (state) => {
   const { elements, form } = state;
-  if (!form.isValid) {
-    elements.feedback.innerHTML = form.error;
-    elements.input.classList.add('is-invalid');
-  } else {
-    elements.feedback.innerHTML = '';
+  elements.feedback.innerHTML = form.error;
+  elements.feedback.classList.add('text-danger');
+  elements.input.classList.add('is-invalid');
+};
+
+const renderFeedback = (state, i18nextInstance) => {
+  console.log(state);
+  const { elements, form } = state;
+  if (form.isValid) {
+    elements.feedback.innerHTML = i18nextInstance.t('successAdd');
     elements.input.classList.remove('is-invalid');
+    elements.feedback.classList.remove('text-danger');
+    elements.feedback.classList.add('text-success');
     elements.input.value = '';
     elements.input.focus();
   }
@@ -18,15 +25,16 @@ const disableSendButton = (state) => {
   } else {
     elements.sendButton.removeAttribute('disabled');
   }
-}
+};
 
 export default (state, i18nextInstance) => (path, value) => {
-  if (path === 'feeds') {
-    state.elements.input.value = '';
-    state.elements.input.focus();
-  }
-  if (path === 'form.error') {
-    renderError(state);
+  if (path === 'form.process') {
+    if (value === 'failed') {
+      renderError(state);
+    }
+    if (value === 'processed') {
+      renderFeedback(state, i18nextInstance);
+    }
   }
   if (path === 'sendButton.isDisabled') {
     disableSendButton(state);
