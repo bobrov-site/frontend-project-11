@@ -5,5 +5,6 @@ export default {
     errorNowUnique: 'RSS уже существует',
     errowResourceNotValid: 'Ресурс содержит не валидный RSS',
     successAdd: 'RSS успешно добавлен',
+    ERR_BAD_REQUEST: 'Неверная ссылка',
   },
 };
