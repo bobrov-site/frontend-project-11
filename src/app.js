@@ -44,6 +44,27 @@ const generateFeed = (parsedData) => {
   return feed;
 };
 
+const generatePosts = (parsedData, feedId) => {
+  const posts = [];
+  const items = parsedData.querySelectorAll('item');
+  items.forEach((item) => {
+    const post = {};
+    const id = Date.now();
+    const title = item.querySelector('title');
+    const link = item.querySelector('link');
+    const description = item.querySelector('description');
+    const pubDate = item.querySelector('pubDate');
+    post.title = title.innerHTML.replace("<![CDATA[", "").replace("]]>", "");
+    post.link = link.innerHTML.replace("<![CDATA[", "").replace("]]>", "");
+    post.description = description.innerHTML.replace("<![CDATA[", "").replace("]]>", "");
+    post.pubDate = pubDate.innerHTML;
+    post.id = id;
+    post.feedId = feedId;
+    posts.push(post);
+  });
+  return posts;
+};
+
 export default (() => {
   const i18nextInstance = i18next.createInstance();
   i18nextInstance.init({
@@ -60,26 +81,23 @@ export default (() => {
     event.preventDefault();
     const url = new FormData(event.target).get('url');
     generateSchema().validate({ url }).then(() => {
-      watchedState.form.isValid = true;
-      watchedState.form.error = '';
       axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(url)}`)
         .then((response) => {
           const parsedData = parse(response.data.contents);
           return parsedData;
           // watchedState.feeds.push({ url, data: response.data });
         }).then((parsedData) => {
-          watchedState.sendButton.isDisabled = false;
           const feed = generateFeed(parsedData);
           const posts = generatePosts(parsedData, feed.id);
+          watchedState.form.isValid = true;
+          watchedState.form.error = '';
+          watchedState.sendButton.isDisabled = false;
+          console.log(feed, posts, 'feed and posts');
         })
         .catch((e) => {
           watchedState.form.isValid = false;
           watchedState.sendButton.isDisabled = false;
-          if (e.code === 'ERR_BAD_REQUEST') {
-            watchedState.form.error = i18nextInstance.t(e.code);
-          } else {
-            watchedState.form.error = i18nextInstance.t(e.message);
-          }
+          watchedState.form.error = i18nextInstance.t(e.code === 'ERR_BAD_REQUEST' ? 'errorBadRequest' : e.message);
         });
     })
       .catch((e) => {
