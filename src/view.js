@@ -33,8 +33,8 @@ const createContentCard = (title) => {
 };
 
 const renderColumnFeed = (state, i18nextInstance) => {
-  //TODO доделать карточки
-  const { feeds, elements } = state;
+  // TODO доделать карточки
+  const { elements } = state;
   const card = createContentCard(i18nextInstance.t('feedsTitle'));
   elements.feedsColumn.append(card);
 };
