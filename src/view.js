@@ -6,7 +6,6 @@ const renderError = (state) => {
 };
 
 const renderFeedback = (state, i18nextInstance) => {
-  console.log(state);
   const { elements, form } = state;
   if (form.isValid) {
     elements.feedback.innerHTML = i18nextInstance.t('successAdd');
