@@ -17,6 +17,25 @@ const renderFeedback = (state, i18nextInstance) => {
   }
 };
 
+const createContentCard = () => {
+  const card = document.createElement('div');
+  const cardBody = document.createElement('div');
+  const cardTitle = document.createElement('h2');
+  const cardList = document.createElement('ul');
+  card.classList.add('card', 'border-0');
+  cardBody.classList.add('card-body');
+  cardTitle.classList.add('card-title');
+  cardList.classList.add('list-group');
+  card.append(cardBody, cardList);
+  cardBody.append(cardTitle);
+  return card;
+}
+
+const renderColumnFeed = (state) => {
+  const card = createContentCard();
+  console.log(card)
+}
+
 const disableSendButton = (state) => {
   const { elements, sendButton } = state;
   if (sendButton.isDisabled) {
@@ -34,6 +53,9 @@ export default (state, i18nextInstance) => (path, value) => {
     if (value === 'processed') {
       renderFeedback(state, i18nextInstance);
     }
+  }
+  if (path === 'feed') {
+    renderColumnFeed(state);
   }
   if (path === 'sendButton.isDisabled') {
     disableSendButton(state);
