@@ -6,5 +6,7 @@ export default {
     errorBadRequest: 'Ресурс указан неверно',
     errorResourceNotValid: 'Ресурс содержит не валидный RSS',
     successAdd: 'RSS успешно добавлен',
+    feedsTitle: 'Фиды',
+    postsTitle: 'Посты',
   },
 };
