@@ -17,7 +17,7 @@ const renderFeedback = (state, i18nextInstance) => {
   }
 };
 
-const createContentCard = () => {
+const createContentCard = (title) => {
   const card = document.createElement('div');
   const cardBody = document.createElement('div');
   const cardTitle = document.createElement('h2');
@@ -26,15 +26,18 @@ const createContentCard = () => {
   cardBody.classList.add('card-body');
   cardTitle.classList.add('card-title');
   cardList.classList.add('list-group');
+  cardTitle.innerHTML = title;
   card.append(cardBody, cardList);
   cardBody.append(cardTitle);
   return card;
-}
+};
 
-const renderColumnFeed = (state) => {
-  const card = createContentCard();
-  console.log(card)
-}
+const renderColumnFeed = (state, i18nextInstance) => {
+  //TODO доделать карточки
+  const { feeds, elements } = state;
+  const card = createContentCard(i18nextInstance.t('feedsTitle'));
+  elements.feedsColumn.append(card);
+};
 
 const disableSendButton = (state) => {
   const { elements, sendButton } = state;
@@ -54,8 +57,8 @@ export default (state, i18nextInstance) => (path, value) => {
       renderFeedback(state, i18nextInstance);
     }
   }
-  if (path === 'feed') {
-    renderColumnFeed(state);
+  if (path === 'feeds') {
+    renderColumnFeed(state, i18nextInstance);
   }
   if (path === 'sendButton.isDisabled') {
     disableSendButton(state);
