@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import i18next from 'i18next';
 import view from './view.js';
 import ru from './locales/ru.js';
+import parse from './parse.js';
 
 const state = {
   form: {
@@ -32,6 +33,17 @@ const generateSchema = () => {
   });
 };
 
+const generateFeed = (parsedData) => {
+  const feed = {};
+  const id = Date.now();
+  const title = parsedData.querySelector('title');
+  const description = parsedData.querySelector('description');
+  feed.id = id;
+  feed.title = title.innerHTML.replace("<![CDATA[", "").replace("]]>", "")
+  feed.description = description.innerHTML.replace("<![CDATA[", "").replace("]]>", "");
+  return feed;
+};
+
 export default (() => {
   const i18nextInstance = i18next.createInstance();
   i18nextInstance.init({
@@ -50,13 +62,24 @@ export default (() => {
     generateSchema().validate({ url }).then(() => {
       watchedState.form.isValid = true;
       watchedState.form.error = '';
-      axios.get(url)
+      axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(url)}`)
         .then((response) => {
-          watchedState.feeds.push({ url, data: response.data });
+          const parsedData = parse(response.data.contents);
+          return parsedData;
+          // watchedState.feeds.push({ url, data: response.data });
+        }).then((parsedData) => {
+          watchedState.sendButton.isDisabled = false;
+          const feed = generateFeed(parsedData);
+          const posts = generatePosts(parsedData, feed.id);
         })
         .catch((e) => {
+          watchedState.form.isValid = false;
           watchedState.sendButton.isDisabled = false;
-          console.log(e, 'error axios');
+          if (e.code === 'ERR_BAD_REQUEST') {
+            watchedState.form.error = i18nextInstance.t(e.code);
+          } else {
+            watchedState.form.error = i18nextInstance.t(e.message);
+          }
         });
     })
       .catch((e) => {
