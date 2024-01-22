@@ -75,13 +75,10 @@ const checkForNewPosts = (state) => {
     response.catch((e) => console.log(e));
     return response;
   });
+
   const promise = Promise.all(requests);
-  promise.then((responses) => {
-    const newPosts = responses.map((response) => {
-      const parsedData = parse(response.data.contents);
-      console.log(state);
-    })
-  });
+  //
+
   setTimeout(() => checkForNewPosts(state), 5000);
 };
 
@@ -117,7 +114,6 @@ export default (() => {
           watchedState.sendButton.isDisabled = false;
           watchedState.feeds.unshift(feed);
           watchedState.posts.unshift(...posts);
-          // loop begins here
           checkForNewPosts(watchedState);
         })
         .catch(() => {
