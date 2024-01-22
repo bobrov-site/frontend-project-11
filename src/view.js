@@ -81,6 +81,7 @@ const renderColumnPosts = (state, i18nextInstance) => {
     link.classList.add('fw-bold');
     link.href = post.link;
     link.textContent = post.title;
+    link.setAttribute('target', '_blank');
     item.append(link, button);
     return item;
   });
