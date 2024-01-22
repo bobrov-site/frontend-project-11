@@ -50,9 +50,8 @@ const generateFeed = (parsedData, url) => {
 };
 
 const generatePosts = (parsedData, feedId) => {
-  const posts = [];
   const items = parsedData.querySelectorAll('item');
-  items.forEach((item) => {
+  const posts = Array.from(items).map((item) => {
     const post = {};
     const id = Date.now();
     const title = item.querySelector('title');
@@ -65,7 +64,7 @@ const generatePosts = (parsedData, feedId) => {
     post.pubDate = pubDate.innerHTML;
     post.id = id;
     post.feedId = feedId;
-    posts.push(post);
+    return post;
   });
   return posts;
 };
@@ -99,9 +98,8 @@ export default (() => {
           watchedState.form.error = '';
           watchedState.form.process = 'processed';
           watchedState.sendButton.isDisabled = false;
-          console.log(feed, posts, 'feed and posts');
           watchedState.feeds.unshift(feed);
-          watchedState.posts.unshift(posts);
+          watchedState.posts.unshift(...posts);
           console.log(state, 'state');
         })
         .catch(() => {
