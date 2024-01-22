@@ -1,6 +1,6 @@
 const renderError = (state) => {
   const { elements, form } = state;
-  elements.feedback.innerHTML = form.error;
+  elements.feedback.textContent = form.error;
   elements.feedback.classList.add('text-danger');
   elements.input.classList.add('is-invalid');
 };
@@ -8,7 +8,7 @@ const renderError = (state) => {
 const renderFeedback = (state, i18nextInstance) => {
   const { elements, form } = state;
   if (form.isValid) {
-    elements.feedback.innerHTML = i18nextInstance.t('successAdd');
+    elements.feedback.textContent = i18nextInstance.t('successAdd');
     elements.input.classList.remove('is-invalid');
     elements.feedback.classList.remove('text-danger');
     elements.feedback.classList.add('text-success');
@@ -26,7 +26,7 @@ const createContentCard = (title) => {
   cardBody.classList.add('card-body');
   cardTitle.classList.add('card-title');
   cardList.classList.add('list-group');
-  cardTitle.innerHTML = title;
+  cardTitle.textContent = title;
   card.append(cardBody, cardList);
   cardBody.append(cardTitle);
   return card;
@@ -50,8 +50,8 @@ const renderColumnFeed = (state, i18nextInstance) => {
     description.classList.add('m-0', 'small', 'text-black-50');
     item.classList.add('list-group-item', 'border-0', 'border-end-0');
     title.classList.add('h6', 'm-0');
-    title.innerHTML = feed.title;
-    description.innerHTML = feed.description;
+    title.textContent = feed.title;
+    description.textContent = feed.description;
     item.append(title, description);
     return item;
   });
