@@ -51,9 +51,9 @@ const generateFeed = (parsedData, url, feedId) => {
 
 const generatePosts = (parsedData, feedId) => {
   const items = parsedData.querySelectorAll('item');
-  const posts = Array.from(items).map((item) => {
+  const posts = Array.from(items).map((item, index) => {
     const post = {};
-    const id = Date.now();
+    const id = index;
     const title = item.querySelector('title');
     const link = item.querySelector('link');
     const description = item.querySelector('description');
@@ -75,7 +75,7 @@ const checkForNewPosts = (state) => {
     response.catch((e) => console.log(e));
     return response;
   });
-
+  console.log(state.posts)
   const promise = Promise.all(requests);
   //
 
