@@ -58,6 +58,15 @@ const renderColumnFeed = (state, i18nextInstance) => {
   list.append(...items);
 };
 
+const renderColumnPosts = (state, i18nextInstance) => {
+  const { elements, posts } = state;
+  if (!elements.postsColumn.hasChildNodes()) {
+    const card = createContentCard(i18nextInstance.t('postsTitle'));
+    elements.postsColumn.append(card)
+  }
+  // const card = elements
+};
+
 const disableSendButton = (state) => {
   const { elements, sendButton } = state;
   if (sendButton.isDisabled) {
@@ -78,6 +87,9 @@ export default (state, i18nextInstance) => (path, value) => {
   }
   if (path === 'feeds') {
     renderColumnFeed(state, i18nextInstance);
+  }
+  if (path === 'posts') {
+    renderColumnPosts(state, i18nextInstance);
   }
   if (path === 'sendButton.isDisabled') {
     disableSendButton(state);
