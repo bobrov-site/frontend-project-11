@@ -37,9 +37,9 @@ const generateSchema = () => {
   });
 };
 
-const generateFeed = (parsedData, url) => {
+const generateFeed = (parsedData, url, feedId) => {
   const feed = {};
-  const id = Date.now();
+  const id = feedId;
   const title = parsedData.querySelector('title');
   const description = parsedData.querySelector('description');
   feed.id = id;
@@ -69,6 +69,22 @@ const generatePosts = (parsedData, feedId) => {
   return posts;
 };
 
+const checkForNewPosts = (state) => {
+  const requests = state.feeds.map((feed) => {
+    const response = axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(feed.url)}`);
+    response.catch((e) => console.log(e));
+    return response;
+  });
+  const promise = Promise.all(requests);
+  promise.then((responses) => {
+    const newPosts = responses.map((response) => {
+      const parsedData = parse(response.data.contents);
+      console.log(state);
+    })
+  });
+  setTimeout(() => checkForNewPosts(state), 5000);
+};
+
 export default (() => {
   const i18nextInstance = i18next.createInstance();
   i18nextInstance.init({
@@ -92,7 +108,8 @@ export default (() => {
           return parsedData;
         })
         .then((parsedData) => {
-          const feed = generateFeed(parsedData, url);
+          const feedId = state.feeds.length + 1;
+          const feed = generateFeed(parsedData, url, feedId);
           const posts = generatePosts(parsedData, feed.id);
           watchedState.form.isValid = true;
           watchedState.form.error = '';
@@ -100,7 +117,8 @@ export default (() => {
           watchedState.sendButton.isDisabled = false;
           watchedState.feeds.unshift(feed);
           watchedState.posts.unshift(...posts);
-          console.log(state, 'state');
+          // loop begins here
+          checkForNewPosts(watchedState);
         })
         .catch(() => {
           watchedState.form.isValid = false;
