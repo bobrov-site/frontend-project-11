@@ -62,9 +62,29 @@ const renderColumnPosts = (state, i18nextInstance) => {
   const { elements, posts } = state;
   if (!elements.postsColumn.hasChildNodes()) {
     const card = createContentCard(i18nextInstance.t('postsTitle'));
-    elements.postsColumn.append(card)
+    elements.postsColumn.append(card);
   }
-  // const card = elements
+  const card = elements.postsColumn.querySelector('.card');
+  const list = card.querySelector('ul');
+  list.innerHTML = '';
+  const items = posts.map((post) => {
+    const item = document.createElement('li');
+    const link = document.createElement('a');
+    const button = document.createElement('button');
+    button.textContent = i18nextInstance.t('postButton');
+    button.setAttribute('type', 'button');
+    button.dataset.id = post.id;
+    button.dataset.bsToogle = 'modal';
+    button.dataset.bsTarget = '#modal';
+    button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    item.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+    link.classList.add('fw-bold');
+    link.href = post.link;
+    link.textContent = post.title;
+    item.append(link, button);
+    return item;
+  });
+  list.append(...items);
 };
 
 const disableSendButton = (state) => {
