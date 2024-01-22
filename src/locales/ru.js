@@ -8,5 +8,6 @@ export default {
     successAdd: 'RSS успешно добавлен',
     feedsTitle: 'Фиды',
     postsTitle: 'Посты',
+    postButton: 'Просмотр',
   },
 };
