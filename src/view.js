@@ -40,8 +40,8 @@ const renderColumnFeed = (state, i18nextInstance) => {
   }
   const card = elements.feedsColumn.querySelector('.card');
   const list = card.querySelector('ul');
-  //TODO вопрос по оптимазици, можно ли так делать, и как лучше сделать, чтобы добавлять по одной единицы элементов, вместо
-  // нескольких?
+  // TODO вопрос по оптимазици, можно ли так делать, и как лучше сделать, чтобы добавлять
+  // по одной единицы элементов, вместо нескольких?
   list.innerHTML = '';
   const items = feeds.map((feed) => {
     const item = document.createElement('li');
