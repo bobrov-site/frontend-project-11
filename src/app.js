@@ -75,8 +75,14 @@ const checkForNewPosts = (state) => {
     response.catch((e) => console.log(e));
     return response;
   });
-  console.log(state.posts)
   const promise = Promise.all(requests);
+  promise.then((responses) => {
+    responses.forEach((response) => {
+      const parsedData = parse(response.data.contents);
+      console.log(parsedData);
+      // const posts = generatePosts(parsedData, response.config.url);
+    })
+  });
   //
 
   setTimeout(() => checkForNewPosts(state), 5000);
