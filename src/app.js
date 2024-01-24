@@ -5,6 +5,7 @@ import i18next from 'i18next';
 import view from './view.js';
 import ru from './locales/ru.js';
 import parse from './parse.js';
+import buildUrl from './helpers/buildUrl.js';
 
 // filling, processing, processed, failed
 
@@ -58,6 +59,7 @@ const generatePosts = (parsedData, feedId) => {
     const link = item.querySelector('link');
     const description = item.querySelector('description');
     const pubDate = item.querySelector('pubDate');
+    //text content
     post.title = title.innerHTML.replace('<![CDATA[', '').replace(']]>', '');
     post.link = link.innerHTML.replace('<![CDATA[', '').replace(']]>', '');
     post.description = description.innerHTML.replace('<![CDATA[', '').replace(']]>', '');
@@ -69,23 +71,20 @@ const generatePosts = (parsedData, feedId) => {
   return posts;
 };
 
-const checkForNewPosts = (state) => {
-  const requests = state.feeds.map((feed) => {
-    const response = axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(feed.url)}`);
-    response.catch((e) => console.log(e));
-    return response;
+const checkForNewPosts = (watchedState) => {
+  watchedState.feeds.forEach((feed) => {
+    axios.get(buildUrl(feed.url))
+      .then((response) => {
+        
+        const parsedData = parse(response.data.contents);
+        console.log(parsedData);
+        const newPosts = generatePosts(parsedData, feed.id);
+        console.log(newPosts);
+        watchedState.posts.unshift(...newPosts);
+        // console.log(watchedState.posts);
+      });
   });
-  const promise = Promise.all(requests);
-  promise.then((responses) => {
-    responses.forEach((response) => {
-      const parsedData = parse(response.data.contents);
-      console.log(parsedData);
-      // const posts = generatePosts(parsedData, response.config.url);
-    })
-  });
-  //
-
-  setTimeout(() => checkForNewPosts(state), 5000);
+  setTimeout(() => checkForNewPosts(watchedState), 5000);
 };
 
 export default (() => {
@@ -105,7 +104,7 @@ export default (() => {
     event.preventDefault();
     const url = new FormData(event.target).get('url');
     generateSchema().validate({ url }).then(() => {
-      axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(url)}`)
+      axios.get(buildUrl(url))
         .then((response) => {
           const parsedData = parse(response.data.contents);
           return parsedData;
