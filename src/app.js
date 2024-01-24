@@ -38,18 +38,6 @@ const generateSchema = () => {
   });
 };
 
-const generateFeed = (parsedData, url, feedId) => {
-  const feed = {};
-  const id = feedId;
-  const title = parsedData.querySelector('title');
-  const description = parsedData.querySelector('description');
-  feed.id = id;
-  feed.url = url;
-  feed.title = title.innerHTML.replace('<![CDATA[', '').replace(']]>', '');
-  feed.description = description.innerHTML.replace('<![CDATA[', '').replace(']]>', '');
-  return feed;
-};
-
 const checkForNewPosts = (watchedState) => {
   watchedState.feeds.forEach((feed) => {
     axios.get(buildUrl(feed.url))
