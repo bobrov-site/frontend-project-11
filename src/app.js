@@ -42,7 +42,7 @@ const checkForNewPosts = (watchedState) => {
   axios.get(buildUrl(watchedState.url))
     .then((response) => {
       const { posts, feed } = parse(response.data.contents);
-      //TODO добавление уникальных постов в массив watchedState.posts
+      // TODO добавление уникальных постов в массив watchedState.posts
       watchedState.posts.unshift(...posts);
       // console.log(watchedState.posts);
     });
