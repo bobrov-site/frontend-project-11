@@ -39,14 +39,13 @@ const generateSchema = () => {
 };
 
 const checkForNewPosts = (watchedState) => {
-  watchedState.feeds.forEach((feed) => {
-    axios.get(buildUrl(feed.url))
-      .then((response) => {
-        const {posts, feed} = parse(response.data.contents);
-        watchedState.posts.unshift(...posts);
-        // console.log(watchedState.posts);
-      });
-  });
+  axios.get(buildUrl(watchedState.url))
+    .then((response) => {
+      const { posts, feed } = parse(response.data.contents);
+      //TODO добавление уникальных постов в массив watchedState.posts
+      watchedState.posts.unshift(...posts);
+      // console.log(watchedState.posts);
+    });
   setTimeout(() => checkForNewPosts(watchedState), 5000);
 };
 
@@ -70,8 +69,9 @@ export default (() => {
       axios.get(buildUrl(url))
         .then((response) => {
           const { posts, feed } = parse(response.data.contents);
-          console.log(posts, feed);
           feed.id = state.feeds.length + 1;
+          watchedState.url = url;
+          // TODO Возможно стоит для фида добавить свой урл введенный пользователем
           watchedState.form.isValid = true;
           watchedState.form.error = '';
           watchedState.form.process = 'processed';
