@@ -50,32 +50,10 @@ const generateFeed = (parsedData, url, feedId) => {
   return feed;
 };
 
-const generatePosts = (parsedData, feedId) => {
-  const items = parsedData.querySelectorAll('item');
-  const posts = Array.from(items).map((item, index) => {
-    const post = {};
-    const id = index;
-    const title = item.querySelector('title');
-    const link = item.querySelector('link');
-    const description = item.querySelector('description');
-    const pubDate = item.querySelector('pubDate');
-    //text content
-    post.title = title.innerHTML.replace('<![CDATA[', '').replace(']]>', '');
-    post.link = link.innerHTML.replace('<![CDATA[', '').replace(']]>', '');
-    post.description = description.innerHTML.replace('<![CDATA[', '').replace(']]>', '');
-    post.pubDate = pubDate.innerHTML;
-    post.id = id;
-    post.feedId = feedId;
-    return post;
-  });
-  return posts;
-};
-
 const checkForNewPosts = (watchedState) => {
   watchedState.feeds.forEach((feed) => {
     axios.get(buildUrl(feed.url))
       .then((response) => {
-        
         const parsedData = parse(response.data.contents);
         console.log(parsedData);
         const newPosts = generatePosts(parsedData, feed.id);
@@ -106,20 +84,16 @@ export default (() => {
     generateSchema().validate({ url }).then(() => {
       axios.get(buildUrl(url))
         .then((response) => {
-          const parsedData = parse(response.data.contents);
-          return parsedData;
-        })
-        .then((parsedData) => {
-          const feedId = state.feeds.length + 1;
-          const feed = generateFeed(parsedData, url, feedId);
-          const posts = generatePosts(parsedData, feed.id);
+          const { posts, feed } = parse(response.data.contents);
+          console.log(posts, feed);
+          feed.id = state.feeds.length + 1;
           watchedState.form.isValid = true;
           watchedState.form.error = '';
           watchedState.form.process = 'processed';
           watchedState.sendButton.isDisabled = false;
           watchedState.feeds.unshift(feed);
           watchedState.posts.unshift(...posts);
-          checkForNewPosts(watchedState);
+          // checkForNewPosts(watchedState);
         })
         .catch(() => {
           watchedState.form.isValid = false;
