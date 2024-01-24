@@ -8,7 +8,6 @@ const parse = (data) => {
   const feed = {};
   feed.title = rss.querySelector('title').textContent;
   feed.description = rss.querySelector('description').textContent;
-  feed.url = rss.querySelector('link').textContent;
   const items = document.querySelectorAll('item');
   const posts = Array.from(items).map((item, index) => {
     const post = {};
