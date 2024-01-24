@@ -54,11 +54,8 @@ const checkForNewPosts = (watchedState) => {
   watchedState.feeds.forEach((feed) => {
     axios.get(buildUrl(feed.url))
       .then((response) => {
-        const parsedData = parse(response.data.contents);
-        console.log(parsedData);
-        const newPosts = generatePosts(parsedData, feed.id);
-        console.log(newPosts);
-        watchedState.posts.unshift(...newPosts);
+        const {posts, feed} = parse(response.data.contents);
+        watchedState.posts.unshift(...posts);
         // console.log(watchedState.posts);
       });
   });
@@ -93,7 +90,7 @@ export default (() => {
           watchedState.sendButton.isDisabled = false;
           watchedState.feeds.unshift(feed);
           watchedState.posts.unshift(...posts);
-          // checkForNewPosts(watchedState);
+          checkForNewPosts(watchedState);
         })
         .catch(() => {
           watchedState.form.isValid = false;
