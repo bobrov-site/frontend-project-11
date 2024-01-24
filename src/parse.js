@@ -5,7 +5,23 @@ const parse = (data) => {
   if (!document.contains(rss)) {
     throw new Error('errowResourceNotValid');
   }
-  return rss;
+  const feed = {};
+  feed.title = rss.querySelector('title').textContent;
+  feed.description = rss.querySelector('description').textContent;
+  feed.url = rss.querySelector('link').textContent;
+  const items = document.querySelectorAll('item');
+  const posts = Array.from(items).map((item, index) => {
+    const post = {};
+    const title = item.querySelector('title');
+    const link = item.querySelector('link');
+    const description = item.querySelector('description');
+    post.title = title.textContent;
+    post.link = link.textContent;
+    post.description = description.textContent;
+    post.id = index;
+    return post;
+  });
+  return { feed, posts };
 };
 
 export default parse;
