@@ -68,9 +68,9 @@ export default (() => {
     generateSchema().validate({ url }).then(() => {
       axios.get(buildUrl(url))
         .then((response) => {
-          const { posts, feed } = parse(response.data.contents);
+          const { feed, posts } = parse(response.data.contents);
           feed.id = state.feeds.length + 1;
-          watchedState.url = url;
+          feed.url = url;
           // TODO Возможно стоит для фида добавить свой урл введенный пользователем
           watchedState.form.isValid = true;
           watchedState.form.error = '';
@@ -78,7 +78,7 @@ export default (() => {
           watchedState.sendButton.isDisabled = false;
           watchedState.feeds.unshift(feed);
           watchedState.posts.unshift(...posts);
-          checkForNewPosts(watchedState);
+          // checkForNewPosts(watchedState);
         })
         .catch(() => {
           watchedState.form.isValid = false;
