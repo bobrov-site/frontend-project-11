@@ -95,6 +95,43 @@ const disableSendButton = (state) => {
   }
 };
 
+const renderModal = (state) => {
+  const { modal } = state;
+  if (modal.isOpen) {
+    //TODO доделать отрисовку текста на кнопках, отрисовка по посту
+    //add modal
+    const modal = document.createElement('div');
+    const modalDialog = document.createElement('div');
+    const modalContent = document.createElement('div');
+    const modalHeader = document.createElement('div');
+    const modalTitle = document.createElement('h5');
+    const modalBody = document.createElement('div');
+    const modalFooter = document.createElement('div');
+    const closeIcon = document.createElement('button');
+    const closeButton = document.createElement('button');
+    const readButton = document.createElement('button');
+    modal.classList.add('modal', 'fade');
+    modal.setAttribute('tabindex', '-1');
+    modalDialog.classList.add('modal-dialog');
+    modalContent.classList.add('modal-content');
+    modalHeader.classList.add('modal-header');
+    modalTitle.classList.add('modal-title');
+    modalBody.classList.add('modal-body');
+    modalFooter.classList.add('modal-footer');
+    closeIcon.classList.add('btn-close');
+    closeIcon.dataset.bsDismiss = 'modal';
+    closeIcon.setAttribute('type', 'button');
+    closeIcon.setAttribute('aria-label', 'Close');
+    closeButton.dataset.bsDismiss = 'modal';
+    closeButton.classList.add('btn', 'btn-secondary');
+    readButton.classList.add('btn', 'btn-primary');
+    readButton.setAttribute('type', 'button');
+  }
+  else {
+    //remove modal
+  }
+};
+
 export default (state, i18nextInstance) => (path, value) => {
   if (path === 'form.process') {
     if (value === 'failed') {
@@ -112,5 +149,8 @@ export default (state, i18nextInstance) => (path, value) => {
   }
   if (path === 'sendButton.isDisabled') {
     disableSendButton(state);
+  }
+  if (path === 'modal.isOpen') {
+    renderModal(state);
   }
 };
