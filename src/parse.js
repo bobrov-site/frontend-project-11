@@ -9,7 +9,7 @@ const parse = (data) => {
   feed.title = rss.querySelector('title').textContent;
   feed.description = rss.querySelector('description').textContent;
   const items = document.querySelectorAll('item');
-  const posts = Array.from(items).map((item, index) => {
+  const posts = Array.from(items).map((item) => {
     const post = {};
     const title = item.querySelector('title');
     const link = item.querySelector('link');
@@ -17,7 +17,7 @@ const parse = (data) => {
     post.title = title.textContent;
     post.link = link.textContent;
     post.description = description.textContent;
-    post.id = index;
+    post.id = Date.now();
     return post;
   });
   return { feed, posts };
