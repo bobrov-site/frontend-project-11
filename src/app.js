@@ -97,6 +97,12 @@ export default (() => {
         watchedState.sendButton.isDisabled = false;
       });
   }));
+  state.elements.postsColumn.addEventListener('click', (event) => {
+    const element = event.target;
+    if (element.classList.contains('btn')) {
+      
+    }
+  })
 });
 
 // https://lorem-rss.hexlet.app/feed
