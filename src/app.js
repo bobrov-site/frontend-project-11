@@ -39,13 +39,15 @@ const generateSchema = () => {
 };
 
 const checkForNewPosts = (watchedState) => {
-  axios.get(buildUrl(watchedState.url))
-    .then((response) => {
-      const { posts, feed } = parse(response.data.contents);
-      // TODO добавление уникальных постов в массив watchedState.posts
-      watchedState.posts.unshift(...posts);
-      // console.log(watchedState.posts);
+  const promises = watchedState.feeds.map((feed) => axios.get(buildUrl(feed.url)).then((response) => response).catch((e) => console.log(e)));
+  const requests = Promise.all(promises);
+  requests.then((responses) => {
+    responses.forEach((response) => {
+      const { posts } = parse(response.data.contents);
+      const newPosts = posts.filter((post) => !watchedState.posts.some((item) => item.title === post.title));
+      watchedState.posts.unshift(...newPosts);
     });
+  });
   setTimeout(() => checkForNewPosts(watchedState), 5000);
 };
 
@@ -71,14 +73,13 @@ export default (() => {
           const { feed, posts } = parse(response.data.contents);
           feed.id = state.feeds.length + 1;
           feed.url = url;
-          // TODO Возможно стоит для фида добавить свой урл введенный пользователем
           watchedState.form.isValid = true;
           watchedState.form.error = '';
           watchedState.form.process = 'processed';
           watchedState.sendButton.isDisabled = false;
           watchedState.feeds.unshift(feed);
           watchedState.posts.unshift(...posts);
-          // checkForNewPosts(watchedState);
+          checkForNewPosts(watchedState);
         })
         .catch(() => {
           watchedState.form.isValid = false;
