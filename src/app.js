@@ -27,8 +27,8 @@ const state = {
     postsColumn: document.querySelector('.posts'),
   },
   feeds: [],
+  seenPosts: [],
   posts: [],
-  url: '',
 };
 
 const generateSchema = () => {
