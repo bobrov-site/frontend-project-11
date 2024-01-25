@@ -39,12 +39,14 @@ const generateSchema = () => {
 };
 
 const checkForNewPosts = (watchedState) => {
-  const promises = watchedState.feeds.map((feed) => axios.get(buildUrl(feed.url)).then((response) => response).catch((e) => console.log(e)));
+  const promises = watchedState.feeds.map((feed) => axios.get(buildUrl(feed.url))
+    .then((response) => response).catch((e) => console.log(e)));
   const requests = Promise.all(promises);
   requests.then((responses) => {
     responses.forEach((response) => {
       const { posts } = parse(response.data.contents);
-      const newPosts = posts.filter((post) => !watchedState.posts.some((item) => item.title === post.title));
+      const newPosts = posts
+        .filter((post) => !watchedState.posts.some((item) => item.title === post.title));
       watchedState.posts.unshift(...newPosts);
     });
   });
