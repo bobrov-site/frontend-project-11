@@ -18,6 +18,10 @@ const state = {
   sendButton: {
     isDisabled: false,
   },
+  modal: {
+    isOpen: false,
+    postId: '',
+  },
   elements: {
     form: document.querySelector('.rss-form'),
     input: document.getElementById('url-input'),
@@ -25,6 +29,7 @@ const state = {
     sendButton: document.querySelector('[type="submit"]'),
     feedsColumn: document.querySelector('.feeds'),
     postsColumn: document.querySelector('.posts'),
+    //TODO добавить открытое модальное окно в элементы, чтобы его можно легко удалить
   },
   feeds: [],
   seenPosts: [],
@@ -100,9 +105,10 @@ export default (() => {
   state.elements.postsColumn.addEventListener('click', (event) => {
     const element = event.target;
     if (element.classList.contains('btn')) {
-      
+      watchedState.modal.postId = element.dataset.id;
+      watchedState.modal.isOpen = true;
     }
-  })
+  });
 });
 
 // https://lorem-rss.hexlet.app/feed
