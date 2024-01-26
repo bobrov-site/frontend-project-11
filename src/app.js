@@ -29,7 +29,7 @@ const state = {
     sendButton: document.querySelector('[type="submit"]'),
     feedsColumn: document.querySelector('.feeds'),
     postsColumn: document.querySelector('.posts'),
-    //TODO добавить открытое модальное окно в элементы, чтобы его можно легко удалить
+    modal: document.querySelector('.modal'),
   },
   feeds: [],
   seenPosts: [],
@@ -105,7 +105,7 @@ export default (() => {
   state.elements.postsColumn.addEventListener('click', (event) => {
     const element = event.target;
     if (element.classList.contains('btn')) {
-      watchedState.modal.postId = element.dataset.id;
+      watchedState.modal.postId = Number(element.dataset.id);
       watchedState.modal.isOpen = true;
     }
   });
