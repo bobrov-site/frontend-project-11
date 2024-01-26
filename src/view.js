@@ -98,11 +98,14 @@ const disableSendButton = (state) => {
 const renderModal = (state) => {
   const { modal, elements } = state;
   if (modal.isOpen) {
-    // elements.modal.removeAttribute('aria-hidden');
-    // elements.modal.classList.add('show');
-  }
-  else {
-    // remove modal
+    const container = elements.modal;
+    const title = container.querySelector('.modal-title');
+    const description = container.querySelector('.modal-body');
+    const linkButton = container.querySelector('.modal-footer a');
+    const openedPost = state.posts.find((post) => post.id === modal.postId);
+    title.textContent = openedPost.title;
+    description.textContent = openedPost.description;
+    linkButton.setAttribute('href', openedPost.link);
   }
 };
 
