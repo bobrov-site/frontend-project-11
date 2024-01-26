@@ -5,6 +5,7 @@ export default {
     errorNowUnique: 'RSS уже существует',
     errorBadRequest: 'Ресурс указан неверно',
     errorResourceNotValid: 'Ресурс содержит не валидный RSS',
+    errorNetwork: 'Ошибка сети',
     successAdd: 'RSS успешно добавлен',
     feedsTitle: 'Фиды',
     postsTitle: 'Посты',
