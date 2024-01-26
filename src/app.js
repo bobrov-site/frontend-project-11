@@ -44,9 +44,9 @@ const generateSchema = () => {
   });
 };
 
-const checkForNewPosts = (watchedState) => {
+const checkForNewPosts = (watchedState, i18nextInstance) => {
   const promises = watchedState.feeds.map((feed) => axios.get(buildUrl(feed.url))
-    .then((response) => response).catch((e) => console.log(e)));
+    .then((response) => response));
   const requests = Promise.all(promises);
   requests.then((responses) => {
     responses.forEach((response) => {
@@ -55,8 +55,17 @@ const checkForNewPosts = (watchedState) => {
         .filter((post) => !watchedState.posts.some((item) => item.title === post.title));
       watchedState.posts.unshift(...newPosts);
     });
+  }).catch((e) => {
+    const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
+    watchedState.form.isValid = false;
+    watchedState.form.error = i18nextInstance.t(message);
+    watchedState.form.process = 'failed';
+    watchedState.sendButton.isDisabled = false;
   });
-  setTimeout(() => checkForNewPosts(watchedState), 5000);
+  if (watchedState.form.process !== 'failed') {
+    console.log(watchedState.form.process);
+    setTimeout(() => checkForNewPosts(watchedState, i18nextInstance), 5000);
+  }
 };
 
 export default (() => {
@@ -88,11 +97,12 @@ export default (() => {
           watchedState.sendButton.isDisabled = false;
           watchedState.feeds.unshift(feed);
           watchedState.posts.unshift(...posts);
-          checkForNewPosts(watchedState);
+          checkForNewPosts(watchedState, i18nextInstance);
         })
-        .catch(() => {
+        .catch((e) => {
+          const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
           watchedState.form.isValid = false;
-          watchedState.form.error = i18nextInstance.t('errorResourceNotValid');
+          watchedState.form.error = i18nextInstance.t(message);
           watchedState.form.process = 'failed';
           watchedState.sendButton.isDisabled = false;
         });
