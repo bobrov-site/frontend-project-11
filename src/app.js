@@ -6,6 +6,7 @@ import view from './view.js';
 import ru from './locales/ru.js';
 import parse from './parse.js';
 import buildUrl from './helpers/buildUrl.js';
+import * as bootstrap from 'bootstrap';
 
 // filling, processing, processed, failed
 
@@ -68,6 +69,7 @@ export default (() => {
     },
   });
   const watchedState = onChange(state, view(state, i18nextInstance));
+  const myModal = new bootstrap.Modal(state.elements.modal);
   state.elements.input.focus();
   state.elements.form.addEventListener('submit', ((event) => {
     watchedState.form.process = 'filling';
@@ -105,6 +107,7 @@ export default (() => {
   state.elements.postsColumn.addEventListener('click', (event) => {
     const element = event.target;
     if (element.classList.contains('btn')) {
+      myModal.show();
       watchedState.modal.postId = Number(element.dataset.id);
       watchedState.modal.isOpen = true;
     }
