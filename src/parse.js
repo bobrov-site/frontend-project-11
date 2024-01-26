@@ -17,7 +17,7 @@ const parse = (data) => {
     post.title = title.textContent;
     post.link = link.textContent;
     post.description = description.textContent;
-    post.id = Date.now();
+    post.id = Date.now() + Math.floor(Math.random() * 1000);
     return post;
   });
   return { feed, posts };
