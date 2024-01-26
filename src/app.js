@@ -45,7 +45,8 @@ const generateSchema = () => {
 };
 
 const checkForNewPosts = (watchedState, i18nextInstance) => {
-  const promises = watchedState.feeds.map((feed) => axios.get(buildUrl(feed.url))
+  const { form, feeds, sendButton } = watchedState;
+  const promises = feeds.map((feed) => axios.get(buildUrl(feed.url))
     .then((response) => response));
   const requests = Promise.all(promises);
   requests.then((responses) => {
@@ -57,13 +58,13 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
     });
   }).catch((e) => {
     const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
-    watchedState.form.isValid = false;
-    watchedState.form.error = i18nextInstance.t(message);
-    watchedState.form.process = 'failed';
-    watchedState.sendButton.isDisabled = false;
+    form.isValid = false;
+    form.error = i18nextInstance.t(message);
+    form.process = 'failed';
+    sendButton.isDisabled = false;
   });
-  if (watchedState.form.process !== 'failed') {
-    console.log(watchedState.form.process);
+  if (form.process !== 'failed') {
+    console.log(form.process);
     setTimeout(() => checkForNewPosts(watchedState, i18nextInstance), 5000);
   }
 };
