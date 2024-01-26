@@ -76,7 +76,12 @@ const renderColumnPosts = (state, i18nextInstance) => {
     button.dataset.bsTarget = '#modalWindow';
     button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
     item.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
-    link.classList.add('fw-bold');
+    if (state.seenPosts.some((seenPost) => seenPost.id === post.id)) {
+      link.classList.add('fw-normal', 'link-secondary');
+      link.classList.remove('fw-bold');
+    } else {
+      link.classList.add('fw-bold');
+    }
     link.href = post.link;
     link.textContent = post.title;
     link.setAttribute('target', '_blank');
@@ -109,17 +114,6 @@ const renderModal = (state) => {
   }
 };
 
-const changeSeenPosts = (state) => {
-  state.seenPosts.forEach((post) => {
-    const element = state.elements.postsColumn.querySelector(`[data-id="${post.id}"]`).previousElementSibling;
-    if (element) {
-      console.log(element);
-      element.classList.remove('fw-bold');
-      element.classList.add('fw-normal');
-    }
-  });
-};
-
 export default (state, i18nextInstance) => (path, value) => {
   if (path === 'form.process') {
     if (value === 'failed') {
@@ -142,6 +136,6 @@ export default (state, i18nextInstance) => (path, value) => {
     renderModal(state);
   }
   if (path === 'seenPosts') {
-    changeSeenPosts(state);
+    renderColumnPosts(state, i18nextInstance);
   }
 };
