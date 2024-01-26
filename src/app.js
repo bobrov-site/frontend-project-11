@@ -106,7 +106,7 @@ export default (() => {
   }));
   state.elements.postsColumn.addEventListener('click', (event) => {
     const element = event.target;
-    watchedState.modal.postId = '';
+    watchedState.openedPostId = '';
     watchedState.modal.isOpen = false;
     if (element.classList.contains('btn')) {
       watchedState.openedPostId = Number(element.dataset.id);
