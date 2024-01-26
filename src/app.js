@@ -109,6 +109,8 @@ export default (() => {
     watchedState.openedPostId = '';
     watchedState.modal.isOpen = false;
     if (element.classList.contains('btn')) {
+      const openedPost = state.posts.find((post) => post.id === Number(element.dataset.id));
+      watchedState.seenPosts.unshift(openedPost);
       watchedState.openedPostId = Number(element.dataset.id);
       watchedState.modal.isOpen = true;
       myModal.show();
