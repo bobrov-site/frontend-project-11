@@ -109,6 +109,17 @@ const renderModal = (state) => {
   }
 };
 
+const changeSeenPosts = (state) => {
+  state.seenPosts.forEach((post) => {
+    const element = state.elements.postsColumn.querySelector(`[data-id="${post.id}"]`).previousElementSibling;
+    if (element) {
+      console.log(element);
+      element.classList.remove('fw-bold');
+      element.classList.add('fw-normal');
+    }
+  });
+};
+
 export default (state, i18nextInstance) => (path, value) => {
   if (path === 'form.process') {
     if (value === 'failed') {
@@ -129,5 +140,8 @@ export default (state, i18nextInstance) => (path, value) => {
   }
   if (path === 'modal.isOpen') {
     renderModal(state);
+  }
+  if (path === 'seenPosts') {
+    changeSeenPosts(state);
   }
 };
