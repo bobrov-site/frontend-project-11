@@ -2,11 +2,11 @@ import onChange from 'on-change';
 import axios from 'axios';
 import * as yup from 'yup';
 import i18next from 'i18next';
+import * as bootstrap from 'bootstrap';
 import view from './view.js';
 import ru from './locales/ru.js';
 import parse from './parse.js';
 import buildUrl from './helpers/buildUrl.js';
-import * as bootstrap from 'bootstrap';
 
 // filling, processing, processed, failed
 
@@ -106,10 +106,12 @@ export default (() => {
   }));
   state.elements.postsColumn.addEventListener('click', (event) => {
     const element = event.target;
+    watchedState.modal.postId = '';
+    watchedState.modal.isOpen = false;
     if (element.classList.contains('btn')) {
-      myModal.show();
       watchedState.modal.postId = Number(element.dataset.id);
       watchedState.modal.isOpen = true;
+      myModal.show();
     }
   });
 });
