@@ -21,8 +21,8 @@ const state = {
   },
   modal: {
     isOpen: false,
-    postId: '',
   },
+  openedPostId: '',
   elements: {
     form: document.querySelector('.rss-form'),
     input: document.getElementById('url-input'),
@@ -109,7 +109,7 @@ export default (() => {
     watchedState.modal.postId = '';
     watchedState.modal.isOpen = false;
     if (element.classList.contains('btn')) {
-      watchedState.modal.postId = Number(element.dataset.id);
+      watchedState.openedPostId = Number(element.dataset.id);
       watchedState.modal.isOpen = true;
       myModal.show();
     }
