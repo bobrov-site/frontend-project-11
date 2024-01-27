@@ -1,6 +1,6 @@
 export default {
   translation: {
-    errorWrongLink: 'Неверная ссылка',
+    errorWrongLink: 'Ссылка должна быть валидным URL',
     errorRequired: 'Это поле обязательно для заполнения',
     errorNowUnique: 'RSS уже существует',
     errorBadRequest: 'Ресурс указан неверно',
