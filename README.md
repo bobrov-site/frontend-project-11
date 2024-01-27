@@ -6,3 +6,23 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/92ea574d86b929b45b52/maintainability)](https://codeclimate.com/github/bobrov-site/frontend-project-11/maintainability)
 
 ### Deploy in [Vercel](https://frontend-project-11-drab-eight.vercel.app)
+
+### Description
+
+Rss-reader is a web application that allows you to add RSS feeds to your. The application also allows you to view the content of each feed. The application also allows you to view the content of each post. You can show preview of each post in modal window.
+
+### Install
+
+## Clone repository
+    git clone https://github.com/bobrov-site/frontend-project-11.git
+
+## Install dependencies
+
+    make install
+
+## Run server
+    make serve
+
+## Build project
+
+    make build
