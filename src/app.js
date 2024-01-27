@@ -2,7 +2,6 @@ import onChange from 'on-change';
 import axios from 'axios';
 import * as yup from 'yup';
 import i18next from 'i18next';
-import * as bootstrap from 'bootstrap';
 import view from './view.js';
 import ru from './locales/ru.js';
 import parse from './parse.js';
@@ -79,7 +78,6 @@ export default (() => {
     },
   });
   const watchedState = onChange(state, view(state, i18nextInstance));
-  const myModal = new bootstrap.Modal(state.elements.modal);
   state.elements.input.focus();
   state.elements.form.addEventListener('submit', ((event) => {
     watchedState.form.process = 'filling';
@@ -124,7 +122,6 @@ export default (() => {
       watchedState.seenPosts.unshift(openedPost);
       watchedState.openedPostId = Number(element.dataset.id);
       watchedState.modal.isOpen = true;
-      myModal.show();
     }
   });
 });
