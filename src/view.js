@@ -72,7 +72,7 @@ const renderColumnPosts = (state, i18nextInstance) => {
     button.textContent = i18nextInstance.t('postButton');
     button.setAttribute('type', 'button');
     button.dataset.id = post.id;
-    button.dataset.bsToogle = 'modal';
+    button.dataset.bsToggle = 'modal';
     button.dataset.bsTarget = '#modalWindow';
     button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
     item.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
