@@ -25,6 +25,9 @@ Rss-reader is a web application that allows you to add RSS feeds to your. The ap
 ## Run server
     make serve
 
+## Server localhost:3000
+    http://localhost:3000
+
 ## Build project
 
     make build
