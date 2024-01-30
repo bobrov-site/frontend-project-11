@@ -85,13 +85,14 @@ export default (() => {
     event.preventDefault();
     const url = new FormData(event.target).get('url');
     generateSchema().validate({ url }).then(() => {
+      watchedState.form.error = '';
+      watchedState.form.isValid = true;
+      watchedState.form.process = 'processing';
       axios.get(buildUrl(url))
         .then((response) => {
           const { feed, posts } = parse(response.data.contents);
           feed.id = state.feeds.length + 1;
           feed.url = url;
-          watchedState.form.isValid = true;
-          watchedState.form.error = '';
           watchedState.form.process = 'processed';
           watchedState.sendButton.isDisabled = false;
           watchedState.feeds.unshift(feed);

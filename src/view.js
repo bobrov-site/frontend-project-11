@@ -5,6 +5,13 @@ const renderError = (state) => {
   elements.input.classList.add('is-invalid');
 };
 
+const removeError = (state) => {
+  const { elements } = state;
+  elements.feedback.textContent = '';
+  elements.feedback.classList.remove('text-danger');
+  elements.input.classList.remove('is-invalid');
+};
+
 const renderFeedback = (state, i18nextInstance) => {
   const { elements, form } = state;
   if (form.isValid) {
@@ -121,6 +128,9 @@ export default (state, i18nextInstance) => (path, value) => {
     }
     if (value === 'processed') {
       renderFeedback(state, i18nextInstance);
+    }
+    if (value === 'processing') {
+      removeError(state);
     }
   }
   if (path === 'feeds') {
