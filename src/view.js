@@ -104,17 +104,15 @@ const renderColumnPosts = (state, i18nextInstance) => {
 };
 
 const renderModal = (state) => {
-  const { modal, openedPostId, elements } = state;
-  if (modal.isOpen) {
-    const container = elements.modal;
-    const title = container.querySelector('.modal-title');
-    const description = container.querySelector('.modal-body');
-    const linkButton = container.querySelector('.modal-footer a');
-    const openedPost = state.posts.find((post) => post.id === openedPostId);
-    title.textContent = openedPost.title;
-    description.textContent = openedPost.description;
-    linkButton.setAttribute('href', openedPost.link);
-  }
+  const { elements } = state;
+  const container = elements.modal;
+  const title = container.querySelector('.modal-title');
+  const description = container.querySelector('.modal-body');
+  const linkButton = container.querySelector('.modal-footer a');
+  const openedPost = state.posts.find((post) => post.id === elements.id);
+  title.textContent = openedPost.title;
+  description.textContent = openedPost.description;
+  linkButton.setAttribute('href', openedPost.link);
 };
 
 export default (state, i18nextInstance) => (path, value) => {
@@ -140,10 +138,14 @@ export default (state, i18nextInstance) => (path, value) => {
   if (path === 'posts') {
     renderColumnPosts(state, i18nextInstance);
   }
-  if (path === 'modal.isOpen') {
-    renderModal(state);
-  }
+  // if (path === 'elements.id') {
+  //   renderModal(state);
+  // }
+  // if (path === 'modal.isOpen') {
+  //   renderModal(state);
+  // }
   if (path === 'seenPosts') {
+    renderModal(state);
     renderColumnPosts(state, i18nextInstance);
   }
 };

@@ -19,7 +19,6 @@ const state = {
   modal: {
     isOpen: false,
   },
-  openedPostId: '',
   elements: {
     form: document.querySelector('.rss-form'),
     input: document.getElementById('url-input'),
@@ -28,6 +27,7 @@ const state = {
     feedsColumn: document.querySelector('.feeds'),
     postsColumn: document.querySelector('.posts'),
     modal: document.querySelector('.modal'),
+    id: null,
   },
   feeds: [],
   seenPosts: [],
@@ -115,13 +115,11 @@ export default (() => {
   }));
   state.elements.postsColumn.addEventListener('click', (event) => {
     const element = event.target;
-    watchedState.openedPostId = '';
-    watchedState.modal.isOpen = false;
+    watchedState.elements.id = null;
     if (element.classList.contains('btn')) {
       const openedPost = state.posts.find((post) => post.id === Number(element.dataset.id));
+      watchedState.elements.id = Number(element.dataset.id);
       watchedState.seenPosts.unshift(openedPost);
-      watchedState.openedPostId = Number(element.dataset.id);
-      watchedState.modal.isOpen = true;
     }
   });
 });
