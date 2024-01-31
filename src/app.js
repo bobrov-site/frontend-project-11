@@ -13,6 +13,9 @@ const state = {
     error: '',
     isValid: true,
   },
+  loadingProcess: {
+    process: 'loading',
+  },
   modal: {
     isOpen: false,
   },
@@ -43,7 +46,8 @@ const generateSchema = () => {
 };
 
 const checkForNewPosts = (watchedState, i18nextInstance) => {
-  const { form, feeds } = watchedState;
+  const { form, feeds, loadingProcess } = watchedState;
+  loadingProcess.process = 'loading';
   const promises = feeds.map((feed) => axios.get(buildUrl(feed.url), axiosConfig)
     .then((response) => response));
   const requests = Promise.all(promises);
@@ -58,10 +62,9 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
     const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
     form.isValid = false;
     form.error = i18nextInstance.t(message);
-    form.process = 'failed';
+    loadingProcess.process = 'failed';
   });
   if (form.process !== 'failed') {
-    console.log(form.process);
     setTimeout(() => checkForNewPosts(watchedState, i18nextInstance), 5000);
   }
 };
@@ -78,18 +81,20 @@ export default (() => {
   const watchedState = onChange(state, view(state, i18nextInstance));
   state.elements.input.focus();
   state.elements.form.addEventListener('submit', ((event) => {
-    watchedState.form.process = 'processing';
     event.preventDefault();
+    watchedState.form.process = 'processing';
     const url = state.elements.input.value;
     generateSchema().validate({ url }).then(() => {
       watchedState.form.error = '';
       watchedState.form.isValid = true;
+      watchedState.loadingProcess.process = 'loading';
       axios.get(buildUrl(url), axiosConfig)
         .then((response) => {
           const { feed, posts } = parse(response.data.contents);
           feed.id = state.feeds.length + 1;
           feed.url = url;
-          watchedState.form.process = 'processed';
+          watchedState.loadingProcess.process = 'succsess';
+          watchedState.form.process = 'filling';
           watchedState.feeds.unshift(feed);
           watchedState.posts.unshift(...posts);
           checkForNewPosts(watchedState, i18nextInstance);
@@ -98,6 +103,7 @@ export default (() => {
           const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
           watchedState.form.isValid = false;
           watchedState.form.error = i18nextInstance.t(message);
+          watchedState.loadingProcess.process = 'failed';
           watchedState.form.process = 'failed';
         });
     })

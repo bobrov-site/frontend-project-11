@@ -122,11 +122,16 @@ export default (state, i18nextInstance) => (path, value) => {
     if (value === 'failed') {
       renderError(state);
     }
-    if (value === 'processed') {
-      renderFeedback(state, i18nextInstance);
-    }
     if (value === 'processing') {
       renderLoadingForm(state);
+    }
+  }
+  if (path === 'loadingProcess.process') {
+    if (value === 'succsess') {
+      renderFeedback(state, i18nextInstance);
+    }
+    if (value === 'failed') {
+      renderError(state);
     }
   }
   if (path === 'feeds') {
