@@ -16,9 +16,6 @@ const state = {
   loadingProcess: {
     process: 'loading',
   },
-  modal: {
-    isOpen: false,
-  },
   elements: {
     form: document.querySelector('.rss-form'),
     input: document.getElementById('url-input'),
