@@ -30,7 +30,7 @@ const state = {
     id: null,
   },
   feeds: [],
-  seenPosts: [],
+  seenPosts: new Set(),
   posts: [],
 };
 
@@ -119,7 +119,7 @@ export default (() => {
     if (element.classList.contains('btn')) {
       const openedPost = state.posts.find((post) => post.id === Number(element.dataset.id));
       watchedState.elements.id = Number(element.dataset.id);
-      watchedState.seenPosts.unshift(openedPost);
+      watchedState.seenPosts.add(openedPost);
     }
   });
 });

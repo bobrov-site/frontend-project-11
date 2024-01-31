@@ -88,7 +88,7 @@ const renderColumnPosts = (state, i18nextInstance) => {
     button.dataset.bsTarget = '#modalWindow';
     button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
     item.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
-    if (state.seenPosts.some((seenPost) => seenPost.id === post.id)) {
+    if (state.seenPosts.has(post)) {
       link.classList.add('fw-normal', 'link-secondary');
       link.classList.remove('fw-bold');
     } else {
