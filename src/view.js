@@ -1,31 +1,31 @@
 const renderError = (state) => {
-  const { elements, form } = state;
-  elements.feedback.textContent = form.error;
-  elements.feedback.classList.add('text-danger');
-  elements.input.classList.add('is-invalid');
-  elements.input.removeAttribute('disabled');
-  elements.sendButton.removeAttribute('disabled');
+  const { ui, form } = state;
+  ui.feedback.textContent = form.error;
+  ui.feedback.classList.add('text-danger');
+  ui.input.classList.add('is-invalid');
+  ui.input.removeAttribute('disabled');
+  ui.sendButton.removeAttribute('disabled');
 };
 
 const renderLoadingForm = (state) => {
-  const { elements } = state;
-  elements.input.setAttribute('disabled', '');
-  elements.sendButton.setAttribute('disabled', '');
-  elements.feedback.textContent = '';
-  elements.feedback.classList.remove('text-danger');
-  elements.input.classList.remove('is-invalid');
+  const { ui } = state;
+  ui.input.setAttribute('disabled', '');
+  ui.sendButton.setAttribute('disabled', '');
+  ui.feedback.textContent = '';
+  ui.feedback.classList.remove('text-danger');
+  ui.input.classList.remove('is-invalid');
 };
 
 const renderFeedback = (state, i18nextInstance) => {
-  const { elements, form } = state;
+  const { ui, form } = state;
   if (form.isValid) {
-    elements.feedback.textContent = i18nextInstance.t('successAdd');
-    elements.sendButton.removeAttribute('disabled');
-    elements.input.removeAttribute('disabled');
-    elements.feedback.classList.remove('text-danger');
-    elements.feedback.classList.add('text-success');
-    elements.input.value = '';
-    elements.input.focus();
+    ui.feedback.textContent = i18nextInstance.t('successAdd');
+    ui.sendButton.removeAttribute('disabled');
+    ui.input.removeAttribute('disabled');
+    ui.feedback.classList.remove('text-danger');
+    ui.feedback.classList.add('text-success');
+    ui.input.value = '';
+    ui.input.focus();
   }
 };
 
@@ -45,12 +45,12 @@ const createContentCard = (title) => {
 };
 
 const renderColumnFeed = (state, i18nextInstance) => {
-  const { elements, feeds } = state;
-  if (!elements.feedsColumn.hasChildNodes()) {
+  const { ui, feeds } = state;
+  if (!ui.feedsColumn.hasChildNodes()) {
     const card = createContentCard(i18nextInstance.t('feedsTitle'));
-    elements.feedsColumn.append(card);
+    ui.feedsColumn.append(card);
   }
-  const card = elements.feedsColumn.querySelector('.card');
+  const card = ui.feedsColumn.querySelector('.card');
   const list = card.querySelector('ul');
   list.innerHTML = '';
   const items = feeds.map((feed) => {
@@ -69,12 +69,12 @@ const renderColumnFeed = (state, i18nextInstance) => {
 };
 
 const renderColumnPosts = (state, i18nextInstance) => {
-  const { elements, posts } = state;
-  if (!elements.postsColumn.hasChildNodes()) {
+  const { ui, posts } = state;
+  if (!ui.postsColumn.hasChildNodes()) {
     const card = createContentCard(i18nextInstance.t('postsTitle'));
-    elements.postsColumn.append(card);
+    ui.postsColumn.append(card);
   }
-  const card = elements.postsColumn.querySelector('.card');
+  const card = ui.postsColumn.querySelector('.card');
   const list = card.querySelector('ul');
   list.innerHTML = '';
   const items = posts.map((post) => {
@@ -88,7 +88,7 @@ const renderColumnPosts = (state, i18nextInstance) => {
     button.dataset.bsTarget = '#modalWindow';
     button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
     item.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
-    if (elements.seenPosts.has(post)) {
+    if (ui.seenPosts.has(post)) {
       link.classList.add('fw-normal', 'link-secondary');
       link.classList.remove('fw-bold');
     } else {
@@ -104,12 +104,12 @@ const renderColumnPosts = (state, i18nextInstance) => {
 };
 
 const renderModal = (state) => {
-  const { elements } = state;
-  const container = elements.modal;
+  const { ui } = state;
+  const container = ui.modal;
   const title = container.querySelector('.modal-title');
   const description = container.querySelector('.modal-body');
   const linkButton = container.querySelector('.modal-footer a');
-  const openedPost = state.posts.find((post) => post.id === elements.id);
+  const openedPost = state.posts.find((post) => post.id === ui.id);
   title.textContent = openedPost.title;
   description.textContent = openedPost.description;
   linkButton.setAttribute('href', openedPost.link);
@@ -138,7 +138,7 @@ export default (state, i18nextInstance) => (path, value) => {
   if (path === 'posts') {
     renderColumnPosts(state, i18nextInstance);
   }
-  if (path === 'elements.seenPosts') {
+  if (path === 'ui.seenPosts') {
     renderModal(state);
     renderColumnPosts(state, i18nextInstance);
   }

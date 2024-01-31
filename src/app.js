@@ -16,7 +16,7 @@ const state = {
   loadingProcess: {
     process: 'loading',
   },
-  elements: {
+  ui: {
     form: document.querySelector('.rss-form'),
     input: document.getElementById('url-input'),
     feedback: document.querySelector('.feedback'),
@@ -76,11 +76,11 @@ export default (() => {
     },
   });
   const watchedState = onChange(state, view(state, i18nextInstance));
-  state.elements.input.focus();
-  state.elements.form.addEventListener('submit', ((event) => {
+  state.ui.input.focus();
+  state.ui.form.addEventListener('submit', ((event) => {
     event.preventDefault();
     watchedState.form.process = 'processing';
-    const url = state.elements.input.value;
+    const url = state.ui.input.value;
     generateSchema().validate({ url }).then(() => {
       watchedState.form.error = '';
       watchedState.form.isValid = true;
@@ -110,13 +110,13 @@ export default (() => {
         watchedState.form.process = 'failed';
       });
   }));
-  state.elements.postsColumn.addEventListener('click', (event) => {
+  state.ui.postsColumn.addEventListener('click', (event) => {
     const element = event.target;
-    watchedState.elements.id = null;
+    watchedState.ui.id = null;
     if (element.classList.contains('btn')) {
       const openedPost = state.posts.find((post) => post.id === Number(element.dataset.id));
-      watchedState.elements.id = Number(element.dataset.id);
-      watchedState.elements.seenPosts.add(openedPost);
+      watchedState.ui.id = Number(element.dataset.id);
+      watchedState.ui.seenPosts.add(openedPost);
     }
   });
 });
