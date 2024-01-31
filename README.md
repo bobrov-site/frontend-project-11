@@ -11,7 +11,7 @@
 
 ### Description
 
-Rss-reader is a web application that allows you to add RSS feeds to your. The application also allows you to view the content of each feed. The application also allows you to view the content of each post. You can show preview of each post in modal window.
+Rss-reader is a web application that allows you to add RSS feeds. The application also allows you to view the content of each feed. Each feed has posts which are displayed on the main page. You can show preview of the posts in modal window.
 
 ### Install
 
