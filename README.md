@@ -1,4 +1,4 @@
-### Hexlet tests and linter status:
+### Hexlet tests and build status:
 [![Actions Status](https://github.com/bobrov-site/frontend-project-11/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/bobrov-site/frontend-project-11/actions)
 
 ![build workflow](https://github.com/bobrov-site/frontend-project-11/actions/workflows/build.yml/badge.svg)
