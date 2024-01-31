@@ -74,49 +74,50 @@ export default (() => {
     resources: {
       ru,
     },
-  });
-  const watchedState = onChange(state, view(state, i18nextInstance));
-  state.ui.input.focus();
-  state.ui.form.addEventListener('submit', ((event) => {
-    event.preventDefault();
-    watchedState.form.process = 'processing';
-    const url = state.ui.input.value;
-    generateSchema().validate({ url }).then(() => {
-      watchedState.form.error = '';
-      watchedState.form.isValid = true;
-      watchedState.loadingProcess.process = 'loading';
-      axios.get(buildUrl(url), axiosConfig)
-        .then((response) => {
-          const { feed, posts } = parse(response.data.contents);
-          feed.id = state.feeds.length + 1;
-          feed.url = url;
-          watchedState.loadingProcess.process = 'succsess';
-          watchedState.form.process = 'filling';
-          watchedState.feeds.unshift(feed);
-          watchedState.posts.unshift(...posts);
-          checkForNewPosts(watchedState, i18nextInstance);
-        })
+  }).then(() => {
+    const watchedState = onChange(state, view(state, i18nextInstance));
+    state.ui.input.focus();
+    state.ui.form.addEventListener('submit', ((event) => {
+      event.preventDefault();
+      watchedState.form.process = 'processing';
+      const url = state.ui.input.value;
+      generateSchema().validate({ url }).then(() => {
+        watchedState.form.error = '';
+        watchedState.form.isValid = true;
+        watchedState.loadingProcess.process = 'loading';
+        axios.get(buildUrl(url), axiosConfig)
+          .then((response) => {
+            const { feed, posts } = parse(response.data.contents);
+            feed.id = state.feeds.length + 1;
+            feed.url = url;
+            watchedState.loadingProcess.process = 'succsess';
+            watchedState.form.process = 'filling';
+            watchedState.feeds.unshift(feed);
+            watchedState.posts.unshift(...posts);
+            checkForNewPosts(watchedState, i18nextInstance);
+          })
+          .catch((e) => {
+            const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
+            watchedState.form.isValid = false;
+            watchedState.form.error = i18nextInstance.t(message);
+            watchedState.loadingProcess.process = 'failed';
+            watchedState.form.process = 'failed';
+          });
+      })
         .catch((e) => {
-          const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
           watchedState.form.isValid = false;
-          watchedState.form.error = i18nextInstance.t(message);
-          watchedState.loadingProcess.process = 'failed';
+          watchedState.form.error = i18nextInstance.t(e.message);
           watchedState.form.process = 'failed';
         });
-    })
-      .catch((e) => {
-        watchedState.form.isValid = false;
-        watchedState.form.error = i18nextInstance.t(e.message);
-        watchedState.form.process = 'failed';
-      });
-  }));
-  state.ui.postsColumn.addEventListener('click', (event) => {
-    const element = event.target;
-    watchedState.ui.id = null;
-    if (element.classList.contains('btn')) {
-      const openedPost = state.posts.find((post) => post.id === Number(element.dataset.id));
-      watchedState.ui.id = Number(element.dataset.id);
-      watchedState.ui.seenPosts.add(openedPost);
-    }
+    }));
+    state.ui.postsColumn.addEventListener('click', (event) => {
+      const element = event.target;
+      watchedState.ui.id = null;
+      if (element.classList.contains('btn')) {
+        const openedPost = state.posts.find((post) => post.id === Number(element.dataset.id));
+        watchedState.ui.id = Number(element.dataset.id);
+        watchedState.ui.seenPosts.add(openedPost);
+      }
+    });
   });
 });
