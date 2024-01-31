@@ -7,7 +7,7 @@
 
 ## Deployed in [Vercel](https://frontend-project-11-drab-eight.vercel.app)
 
-![preview.png](src/preview.png)
+![preview.png](images/preview.png)
 
 ## Description
 
