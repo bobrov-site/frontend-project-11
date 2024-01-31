@@ -5,8 +5,9 @@ const renderError = (state) => {
   elements.input.classList.add('is-invalid');
 };
 
-const removeError = (state) => {
+const renderLoadingForm = (state) => {
   const { elements } = state;
+  elements.input.setAttribute('disabled', '');
   elements.feedback.textContent = '';
   elements.feedback.classList.remove('text-danger');
   elements.input.classList.remove('is-invalid');
@@ -16,7 +17,7 @@ const renderFeedback = (state, i18nextInstance) => {
   const { elements, form } = state;
   if (form.isValid) {
     elements.feedback.textContent = i18nextInstance.t('successAdd');
-    elements.input.classList.remove('is-invalid');
+    elements.input.removeAttribute('disabled');
     elements.feedback.classList.remove('text-danger');
     elements.feedback.classList.add('text-success');
     elements.input.value = '';
@@ -130,7 +131,7 @@ export default (state, i18nextInstance) => (path, value) => {
       renderFeedback(state, i18nextInstance);
     }
     if (value === 'processing') {
-      removeError(state);
+      renderLoadingForm(state);
     }
   }
   if (path === 'feeds') {
