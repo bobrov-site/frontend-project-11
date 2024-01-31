@@ -36,6 +36,10 @@ const state = {
   posts: [],
 };
 
+const axiosConfig = {
+  timeout: 10000,
+};
+
 const generateSchema = () => {
   const urlsList = state.feeds.map((feed) => feed.url);
   return yup.object({
@@ -45,7 +49,7 @@ const generateSchema = () => {
 
 const checkForNewPosts = (watchedState, i18nextInstance) => {
   const { form, feeds, sendButton } = watchedState;
-  const promises = feeds.map((feed) => axios.get(buildUrl(feed.url))
+  const promises = feeds.map((feed) => axios.get(buildUrl(feed.url), axiosConfig)
     .then((response) => response));
   const requests = Promise.all(promises);
   requests.then((responses) => {
@@ -88,7 +92,7 @@ export default (() => {
       watchedState.form.error = '';
       watchedState.form.isValid = true;
       watchedState.form.process = 'processing';
-      axios.get(buildUrl(url))
+      axios.get(buildUrl(url), axiosConfig)
         .then((response) => {
           const { feed, posts } = parse(response.data.contents);
           feed.id = state.feeds.length + 1;
