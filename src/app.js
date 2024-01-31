@@ -28,9 +28,9 @@ const state = {
     postsColumn: document.querySelector('.posts'),
     modal: document.querySelector('.modal'),
     id: null,
+    seenPosts: new Set(),
   },
   feeds: [],
-  seenPosts: new Set(),
   posts: [],
 };
 
@@ -119,7 +119,7 @@ export default (() => {
     if (element.classList.contains('btn')) {
       const openedPost = state.posts.find((post) => post.id === Number(element.dataset.id));
       watchedState.elements.id = Number(element.dataset.id);
-      watchedState.seenPosts.add(openedPost);
+      watchedState.elements.seenPosts.add(openedPost);
     }
   });
 });

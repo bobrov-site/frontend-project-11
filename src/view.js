@@ -88,7 +88,7 @@ const renderColumnPosts = (state, i18nextInstance) => {
     button.dataset.bsTarget = '#modalWindow';
     button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
     item.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
-    if (state.seenPosts.has(post)) {
+    if (elements.seenPosts.has(post)) {
       link.classList.add('fw-normal', 'link-secondary');
       link.classList.remove('fw-bold');
     } else {
@@ -138,7 +138,7 @@ export default (state, i18nextInstance) => (path, value) => {
   if (path === 'posts') {
     renderColumnPosts(state, i18nextInstance);
   }
-  if (path === 'seenPosts') {
+  if (path === 'elements.seenPosts') {
     renderModal(state);
     renderColumnPosts(state, i18nextInstance);
   }
