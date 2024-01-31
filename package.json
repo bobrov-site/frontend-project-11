@@ -1,7 +1,7 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.0",
-  "description": "My webpack project",
+  "description": "Rss-reader is a web application that allows you to add RSS feeds",
   "main": "index.js",
   "type": "module",
   "scripts": {
