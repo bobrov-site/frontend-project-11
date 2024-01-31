@@ -138,12 +138,6 @@ export default (state, i18nextInstance) => (path, value) => {
   if (path === 'posts') {
     renderColumnPosts(state, i18nextInstance);
   }
-  // if (path === 'elements.id') {
-  //   renderModal(state);
-  // }
-  // if (path === 'modal.isOpen') {
-  //   renderModal(state);
-  // }
   if (path === 'seenPosts') {
     renderModal(state);
     renderColumnPosts(state, i18nextInstance);
