@@ -3,11 +3,14 @@ const renderError = (state) => {
   elements.feedback.textContent = form.error;
   elements.feedback.classList.add('text-danger');
   elements.input.classList.add('is-invalid');
+  elements.input.removeAttribute('disabled');
+  elements.sendButton.removeAttribute('disabled');
 };
 
 const renderLoadingForm = (state) => {
   const { elements } = state;
   elements.input.setAttribute('disabled', '');
+  elements.sendButton.setAttribute('disabled', '');
   elements.feedback.textContent = '';
   elements.feedback.classList.remove('text-danger');
   elements.input.classList.remove('is-invalid');
@@ -17,6 +20,7 @@ const renderFeedback = (state, i18nextInstance) => {
   const { elements, form } = state;
   if (form.isValid) {
     elements.feedback.textContent = i18nextInstance.t('successAdd');
+    elements.sendButton.removeAttribute('disabled');
     elements.input.removeAttribute('disabled');
     elements.feedback.classList.remove('text-danger');
     elements.feedback.classList.add('text-success');
@@ -99,15 +103,6 @@ const renderColumnPosts = (state, i18nextInstance) => {
   list.append(...items);
 };
 
-const disableSendButton = (state) => {
-  const { elements, sendButton } = state;
-  if (sendButton.isDisabled) {
-    elements.sendButton.setAttribute('disabled', '');
-  } else {
-    elements.sendButton.removeAttribute('disabled');
-  }
-};
-
 const renderModal = (state) => {
   const { modal, openedPostId, elements } = state;
   if (modal.isOpen) {
@@ -139,9 +134,6 @@ export default (state, i18nextInstance) => (path, value) => {
   }
   if (path === 'posts') {
     renderColumnPosts(state, i18nextInstance);
-  }
-  if (path === 'sendButton.isDisabled') {
-    disableSendButton(state);
   }
   if (path === 'modal.isOpen') {
     renderModal(state);

@@ -13,9 +13,6 @@ const state = {
     error: '',
     isValid: true,
   },
-  sendButton: {
-    isDisabled: false,
-  },
   modal: {
     isOpen: false,
   },
@@ -46,7 +43,7 @@ const generateSchema = () => {
 };
 
 const checkForNewPosts = (watchedState, i18nextInstance) => {
-  const { form, feeds, sendButton } = watchedState;
+  const { form, feeds } = watchedState;
   const promises = feeds.map((feed) => axios.get(buildUrl(feed.url), axiosConfig)
     .then((response) => response));
   const requests = Promise.all(promises);
@@ -62,7 +59,6 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
     form.isValid = false;
     form.error = i18nextInstance.t(message);
     form.process = 'failed';
-    sendButton.isDisabled = false;
   });
   if (form.process !== 'failed') {
     console.log(form.process);
@@ -82,21 +78,18 @@ export default (() => {
   const watchedState = onChange(state, view(state, i18nextInstance));
   state.elements.input.focus();
   state.elements.form.addEventListener('submit', ((event) => {
-    watchedState.form.process = 'filling';
-    watchedState.sendButton.isDisabled = true;
+    watchedState.form.process = 'processing';
     event.preventDefault();
-    const url = new FormData(event.target).get('url');
+    const url = state.elements.input.value;
     generateSchema().validate({ url }).then(() => {
       watchedState.form.error = '';
       watchedState.form.isValid = true;
-      watchedState.form.process = 'processing';
       axios.get(buildUrl(url), axiosConfig)
         .then((response) => {
           const { feed, posts } = parse(response.data.contents);
           feed.id = state.feeds.length + 1;
           feed.url = url;
           watchedState.form.process = 'processed';
-          watchedState.sendButton.isDisabled = false;
           watchedState.feeds.unshift(feed);
           watchedState.posts.unshift(...posts);
           checkForNewPosts(watchedState, i18nextInstance);
@@ -106,14 +99,12 @@ export default (() => {
           watchedState.form.isValid = false;
           watchedState.form.error = i18nextInstance.t(message);
           watchedState.form.process = 'failed';
-          watchedState.sendButton.isDisabled = false;
         });
     })
       .catch((e) => {
         watchedState.form.isValid = false;
         watchedState.form.error = i18nextInstance.t(e.message);
         watchedState.form.process = 'failed';
-        watchedState.sendButton.isDisabled = false;
       });
   }));
   state.elements.postsColumn.addEventListener('click', (event) => {
