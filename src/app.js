@@ -7,8 +7,6 @@ import ru from './locales/ru.js';
 import parse from './parse.js';
 import buildUrl from './helpers/buildUrl.js';
 
-// filling, processing, processed, failed
-
 const state = {
   form: {
     process: 'filling',
@@ -130,6 +128,3 @@ export default (() => {
     }
   });
 });
-
-// https://lorem-rss.hexlet.app/feed
-// https://ru.hexlet.io/lessons.rss
