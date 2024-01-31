@@ -5,7 +5,7 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/92ea574d86b929b45b52/maintainability)](https://codeclimate.com/github/bobrov-site/frontend-project-11/maintainability)
 
-### Deploy in [Vercel](https://frontend-project-11-drab-eight.vercel.app)
+### Deployed in [Vercel](https://frontend-project-11-drab-eight.vercel.app)
 
 ![preview.png](src/preview.png)
 
