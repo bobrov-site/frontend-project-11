@@ -31,3 +31,7 @@ Rss-reader is a web application that allows you to add RSS feeds to your. The ap
 ## Build project
 
     make build
+
+## For test you can use next RSS resources:
+    https://lorem-rss.hexlet.app/feed
+    https://ru.hexlet.io/lessons.rss
