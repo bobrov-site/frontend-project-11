@@ -111,7 +111,6 @@ export default (() => {
         });
     }));
     state.ui.postsColumn.addEventListener('click', (event) => {
-      watchedState.ui.id = null;
       if (event.target.dataset.id) {
         const openedPost = state.posts.find((post) => post.id === Number(event.target.dataset.id));
         watchedState.ui.id = Number(event.target.dataset.id);
