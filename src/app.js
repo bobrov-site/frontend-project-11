@@ -25,6 +25,7 @@ const state = {
   },
   loadingProcess: {
     process: 'loading',
+    error: '',
   },
   ui: {
     id: null,
@@ -101,10 +102,10 @@ export default (() => {
           })
           .catch((e) => {
             const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
-            watchedState.form.isValid = false;
-            watchedState.form.error = i18nextInstance.t(message);
+            // watchedState.form.isValid = false;
+            watchedState.loadingProcess.error = i18nextInstance.t(message);
             watchedState.loadingProcess.process = 'failed';
-            watchedState.form.process = 'failed';
+            // watchedState.form.process = 'failed';
           });
       })
         .catch((e) => {
