@@ -7,6 +7,16 @@ import ru from './locales/ru.js';
 import parse from './parse.js';
 import buildUrl from './helpers/buildUrl.js';
 
+const elements = {
+  form: document.querySelector('.rss-form'),
+  input: document.getElementById('url-input'),
+  feedback: document.querySelector('.feedback'),
+  sendButton: document.querySelector('[type="submit"]'),
+  feedsColumn: document.querySelector('.feeds'),
+  postsColumn: document.querySelector('.posts'),
+  modal: document.querySelector('.modal'),
+};
+
 const state = {
   form: {
     process: 'filling',
@@ -17,13 +27,6 @@ const state = {
     process: 'loading',
   },
   ui: {
-    form: document.querySelector('.rss-form'),
-    input: document.getElementById('url-input'),
-    feedback: document.querySelector('.feedback'),
-    sendButton: document.querySelector('[type="submit"]'),
-    feedsColumn: document.querySelector('.feeds'),
-    postsColumn: document.querySelector('.posts'),
-    modal: document.querySelector('.modal'),
     id: null,
     seenPosts: new Set(),
   },
@@ -75,12 +78,12 @@ export default (() => {
       ru,
     },
   }).then(() => {
-    const watchedState = onChange(state, view(state, i18nextInstance));
-    state.ui.input.focus();
-    state.ui.form.addEventListener('submit', ((event) => {
+    const watchedState = onChange(state, view(state, i18nextInstance, elements));
+    elements.input.focus();
+    elements.form.addEventListener('submit', ((event) => {
       event.preventDefault();
       watchedState.form.process = 'processing';
-      const url = state.ui.input.value;
+      const url = elements.input.value;
       generateSchema().validate({ url }).then(() => {
         watchedState.form.error = '';
         watchedState.form.isValid = true;
@@ -110,7 +113,7 @@ export default (() => {
           watchedState.form.process = 'failed';
         });
     }));
-    state.ui.postsColumn.addEventListener('click', (event) => {
+    elements.postsColumn.addEventListener('click', (event) => {
       if (event.target.dataset.id) {
         const openedPost = state.posts.find((post) => post.id === Number(event.target.dataset.id));
         watchedState.ui.id = Number(event.target.dataset.id);

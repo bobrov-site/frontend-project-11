@@ -1,31 +1,33 @@
-const renderError = (state) => {
-  const { ui, form } = state;
-  ui.feedback.textContent = form.error;
-  ui.feedback.classList.add('text-danger');
-  ui.input.classList.add('is-invalid');
-  ui.input.removeAttribute('disabled');
-  ui.sendButton.removeAttribute('disabled');
+const renderError = (state, elements) => {
+  const { feedback, input, sendButton } = elements;
+  const { form } = state;
+  feedback.textContent = form.error;
+  feedback.classList.add('text-danger');
+  input.classList.add('is-invalid');
+  input.removeAttribute('disabled');
+  sendButton.removeAttribute('disabled');
 };
 
-const renderLoadingForm = (state) => {
-  const { ui } = state;
-  ui.input.setAttribute('disabled', '');
-  ui.sendButton.setAttribute('disabled', '');
-  ui.feedback.textContent = '';
-  ui.feedback.classList.remove('text-danger');
-  ui.input.classList.remove('is-invalid');
+const renderLoadingForm = (elements) => {
+  const { input, sendButton, feedback } = elements;
+  input.setAttribute('disabled', '');
+  sendButton.setAttribute('disabled', '');
+  feedback.textContent = '';
+  feedback.classList.remove('text-danger');
+  input.classList.remove('is-invalid');
 };
 
-const renderFeedback = (state, i18nextInstance) => {
-  const { ui, form } = state;
+const renderFeedback = (state, i18nextInstance, elements) => {
+  const { feedback, input, sendButton } = elements;
+  const { form } = state;
   if (form.isValid) {
-    ui.feedback.textContent = i18nextInstance.t('successAdd');
-    ui.sendButton.removeAttribute('disabled');
-    ui.input.removeAttribute('disabled');
-    ui.feedback.classList.remove('text-danger');
-    ui.feedback.classList.add('text-success');
-    ui.input.value = '';
-    ui.input.focus();
+    feedback.textContent = i18nextInstance.t('successAdd');
+    sendButton.removeAttribute('disabled');
+    input.removeAttribute('disabled');
+    feedback.classList.remove('text-danger');
+    feedback.classList.add('text-success');
+    input.value = '';
+    input.focus();
   }
 };
 
@@ -44,13 +46,14 @@ const createContentCard = (title) => {
   return card;
 };
 
-const renderColumnFeed = (state, i18nextInstance) => {
-  const { ui, feeds } = state;
-  if (!ui.feedsColumn.hasChildNodes()) {
+const renderColumnFeed = (state, i18nextInstance, elements) => {
+  const { feedsColumn } = elements;
+  const { feeds } = state;
+  if (!feedsColumn.hasChildNodes()) {
     const card = createContentCard(i18nextInstance.t('feedsTitle'));
-    ui.feedsColumn.append(card);
+    feedsColumn.append(card);
   }
-  const card = ui.feedsColumn.querySelector('.card');
+  const card = feedsColumn.querySelector('.card');
   const list = card.querySelector('ul');
   list.innerHTML = '';
   const items = feeds.map((feed) => {
@@ -68,13 +71,14 @@ const renderColumnFeed = (state, i18nextInstance) => {
   list.append(...items);
 };
 
-const renderColumnPosts = (state, i18nextInstance) => {
+const renderColumnPosts = (state, i18nextInstance, elements) => {
+  const { postsColumn } = elements;
   const { ui, posts } = state;
-  if (!ui.postsColumn.hasChildNodes()) {
+  if (!postsColumn.hasChildNodes()) {
     const card = createContentCard(i18nextInstance.t('postsTitle'));
-    ui.postsColumn.append(card);
+    postsColumn.append(card);
   }
-  const card = ui.postsColumn.querySelector('.card');
+  const card = postsColumn.querySelector('.card');
   const list = card.querySelector('ul');
   list.innerHTML = '';
   const items = posts.map((post) => {
@@ -103,43 +107,44 @@ const renderColumnPosts = (state, i18nextInstance) => {
   list.append(...items);
 };
 
-const renderModal = (state) => {
-  const { ui } = state;
-  const container = ui.modal;
+const renderModal = (state, elements) => {
+  const { modal } = elements;
+  const { posts, ui } = state;
+  const container = modal;
   const title = container.querySelector('.modal-title');
   const description = container.querySelector('.modal-body');
   const linkButton = container.querySelector('.modal-footer a');
-  const openedPost = state.posts.find((post) => post.id === ui.id);
+  const openedPost = posts.find((post) => post.id === ui.id);
   title.textContent = openedPost.title;
   description.textContent = openedPost.description;
   linkButton.setAttribute('href', openedPost.link);
 };
 
-export default (state, i18nextInstance) => (path, value) => {
+export default (state, i18nextInstance, elements) => (path, value) => {
   if (path === 'form.process') {
     if (value === 'failed') {
-      renderError(state);
+      renderError(state, elements);
     }
     if (value === 'processing') {
-      renderLoadingForm(state);
+      renderLoadingForm(elements);
     }
   }
   if (path === 'loadingProcess.process') {
     if (value === 'succsess') {
-      renderFeedback(state, i18nextInstance);
+      renderFeedback(state, i18nextInstance, elements);
     }
     if (value === 'failed') {
-      renderError(state);
+      renderError(state, elements);
     }
   }
   if (path === 'feeds') {
-    renderColumnFeed(state, i18nextInstance);
+    renderColumnFeed(state, i18nextInstance, elements);
   }
   if (path === 'posts') {
-    renderColumnPosts(state, i18nextInstance);
+    renderColumnPosts(state, i18nextInstance, elements);
   }
   if (path === 'ui.seenPosts') {
-    renderModal(state);
-    renderColumnPosts(state, i18nextInstance);
+    renderModal(state, elements);
+    renderColumnPosts(state, i18nextInstance, elements);
   }
 };
