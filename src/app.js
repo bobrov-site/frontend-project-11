@@ -111,11 +111,10 @@ export default (() => {
         });
     }));
     state.ui.postsColumn.addEventListener('click', (event) => {
-      const element = event.target;
       watchedState.ui.id = null;
-      if (element.classList.contains('btn')) {
-        const openedPost = state.posts.find((post) => post.id === Number(element.dataset.id));
-        watchedState.ui.id = Number(element.dataset.id);
+      if (event.target.dataset.id) {
+        const openedPost = state.posts.find((post) => post.id === Number(event.target.dataset.id));
+        watchedState.ui.id = Number(event.target.dataset.id);
         watchedState.ui.seenPosts.add(openedPost);
       }
     });
