@@ -41,9 +41,7 @@ const axiosConfig = {
 
 const generateSchema = () => {
   const urlsList = state.feeds.map((feed) => feed.url);
-  return yup.object({
-    url: yup.string().url('errorWrongLink').required('errorRequired').notOneOf(urlsList, 'errorNowUnique'),
-  });
+  return yup.string().url('errorWrongLink').required('errorRequired').notOneOf(urlsList, 'errorNowUnique');
 };
 
 const checkForNewPosts = (watchedState, i18nextInstance) => {
@@ -74,6 +72,10 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
     });
 };
 
+const validate = (url) => generateSchema().validate(url)
+  .then(() => { })
+  .catch((e) => e.message);
+
 export default (() => {
   const i18nextInstance = i18next.createInstance();
   i18nextInstance.init({
@@ -89,32 +91,33 @@ export default (() => {
       event.preventDefault();
       watchedState.form.status = 'processing';
       const url = elements.input.value;
-      generateSchema().validate({ url }).then(() => {
-        watchedState.form.error = '';
-        watchedState.form.isValid = true;
-        watchedState.loadingProcess.status = 'loading';
-        axios.get(buildUrl(url), axiosConfig)
-          .then((response) => {
-            const { feed, posts } = parse(response.data.contents);
-            feed.id = state.feeds.length + 1;
-            feed.url = url;
-            watchedState.loadingProcess.status = 'succsess';
-            watchedState.form.status = 'filling';
-            watchedState.feeds.unshift(feed);
-            watchedState.posts.unshift(...posts);
-            checkForNewPosts(watchedState, i18nextInstance);
-          })
-          .catch((e) => {
-            const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
-            watchedState.loadingProcess.error = i18nextInstance.t(message);
-            watchedState.loadingProcess.status = 'failed';
-          });
-      })
-        .catch((e) => {
+      validate(url).then((error) => {
+        if (error) {
           watchedState.form.isValid = false;
-          watchedState.form.error = i18nextInstance.t(e.message);
+          watchedState.form.error = i18nextInstance.t(error);
           watchedState.form.status = 'failed';
-        });
+        } else {
+          watchedState.form.error = '';
+          watchedState.form.isValid = true;
+          watchedState.loadingProcess.status = 'loading';
+          axios.get(buildUrl(url), axiosConfig)
+            .then((response) => {
+              const { feed, posts } = parse(response.data.contents);
+              feed.id = state.feeds.length + 1;
+              feed.url = url;
+              watchedState.loadingProcess.status = 'succsess';
+              watchedState.form.status = 'filling';
+              watchedState.feeds.unshift(feed);
+              watchedState.posts.unshift(...posts);
+              checkForNewPosts(watchedState, i18nextInstance);
+            })
+            .catch((e) => {
+              const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
+              watchedState.loadingProcess.error = i18nextInstance.t(message);
+              watchedState.loadingProcess.status = 'failed';
+            });
+        }
+      });
     }));
     elements.postsColumn.addEventListener('click', (event) => {
       if (event.target.dataset.id) {
