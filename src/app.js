@@ -19,12 +19,12 @@ const elements = {
 
 const state = {
   form: {
-    status: 'filling',
+    status: '',
     error: '',
     isValid: true,
   },
   loadingProcess: {
-    status: 'loading',
+    status: '',
     error: '',
   },
   ui: {
@@ -84,7 +84,7 @@ export default (() => {
     },
   }).then(() => {
     const watchedState = onChange(state, view(state, i18nextInstance, elements));
-    elements.input.focus();
+    watchedState.form.status = 'filling';
     elements.form.addEventListener('submit', ((event) => {
       event.preventDefault();
       watchedState.form.status = 'processing';

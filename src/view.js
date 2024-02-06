@@ -31,6 +31,12 @@ const renderFeedback = (state, i18nextInstance, elements) => {
   }
 };
 
+const resetForm = (elements) => {
+  const { input } = elements;
+  input.value = '';
+  input.focus();
+};
+
 const createContentCard = (title) => {
   const card = document.createElement('div');
   const cardBody = document.createElement('div');
@@ -122,6 +128,9 @@ const renderModal = (state, elements) => {
 
 export default (state, i18nextInstance, elements) => (path, value) => {
   if (path === 'form.status') {
+    if (value === 'filling') {
+      resetForm(elements);
+    }
     if (value === 'failed') {
       renderError(state, elements);
     }
