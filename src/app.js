@@ -62,6 +62,9 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
         watchedState.posts.unshift(...newPosts);
       });
     })
+    .then(() => {
+      setTimeout(() => checkForNewPosts(watchedState, i18nextInstance), 5000);
+    })
     .catch((e) => {
       if (e.message === 'Network Error') {
         form.isValid = false;
@@ -69,9 +72,6 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
         loadingProcess.status = 'failed';
       }
     });
-  if (form.status !== 'failed') {
-    setTimeout(() => checkForNewPosts(watchedState, i18nextInstance), 5000);
-  }
 };
 
 export default (() => {
