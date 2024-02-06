@@ -72,6 +72,26 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
     });
 };
 
+const loading = (watchedState, i18nextInstance, url) => {
+  const { loadingProcess } = watchedState;
+  loadingProcess.status = 'loading';
+  axios.get(buildUrl(url), axiosConfig)
+    .then((response) => {
+      const { feed, posts } = parse(response.data.contents);
+      feed.id = state.feeds.length + 1;
+      feed.url = url;
+      loadingProcess.status = 'succsess';
+      watchedState.feeds.unshift(feed);
+      watchedState.posts.unshift(...posts);
+      checkForNewPosts(watchedState, i18nextInstance);
+    })
+    .catch((e) => {
+      const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
+      loadingProcess.error = i18nextInstance.t(message);
+      loadingProcess.status = 'failed';
+    });
+};
+
 const validate = (url) => generateSchema().validate(url)
   .then(() => { })
   .catch((e) => e.message);
@@ -99,23 +119,7 @@ export default (() => {
         } else {
           watchedState.form.error = '';
           watchedState.form.isValid = true;
-          watchedState.loadingProcess.status = 'loading';
-          axios.get(buildUrl(url), axiosConfig)
-            .then((response) => {
-              const { feed, posts } = parse(response.data.contents);
-              feed.id = state.feeds.length + 1;
-              feed.url = url;
-              watchedState.loadingProcess.status = 'succsess';
-              watchedState.form.status = 'filling';
-              watchedState.feeds.unshift(feed);
-              watchedState.posts.unshift(...posts);
-              checkForNewPosts(watchedState, i18nextInstance);
-            })
-            .catch((e) => {
-              const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
-              watchedState.loadingProcess.error = i18nextInstance.t(message);
-              watchedState.loadingProcess.status = 'failed';
-            });
+          loading(watchedState, i18nextInstance, url);
         }
       });
     }));
