@@ -19,7 +19,7 @@ const elements = {
 
 const state = {
   form: {
-    process: 'filling',
+    status: 'filling',
     error: '',
     isValid: true,
   },
@@ -65,7 +65,7 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
     loadingProcess.error = i18nextInstance.t(message);
     loadingProcess.process = 'failed';
   });
-  if (form.process !== 'failed') {
+  if (form.status !== 'failed') {
     setTimeout(() => checkForNewPosts(watchedState, i18nextInstance), 5000);
   }
 };
@@ -83,7 +83,7 @@ export default (() => {
     elements.input.focus();
     elements.form.addEventListener('submit', ((event) => {
       event.preventDefault();
-      watchedState.form.process = 'processing';
+      watchedState.form.status = 'processing';
       const url = elements.input.value;
       generateSchema().validate({ url }).then(() => {
         watchedState.form.error = '';
@@ -95,7 +95,7 @@ export default (() => {
             feed.id = state.feeds.length + 1;
             feed.url = url;
             watchedState.loadingProcess.process = 'succsess';
-            watchedState.form.process = 'filling';
+            watchedState.form.status = 'filling';
             watchedState.feeds.unshift(feed);
             watchedState.posts.unshift(...posts);
             checkForNewPosts(watchedState, i18nextInstance);
@@ -109,7 +109,7 @@ export default (() => {
         .catch((e) => {
           watchedState.form.isValid = false;
           watchedState.form.error = i18nextInstance.t(e.message);
-          watchedState.form.process = 'failed';
+          watchedState.form.status = 'failed';
         });
     }));
     elements.postsColumn.addEventListener('click', (event) => {

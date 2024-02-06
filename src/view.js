@@ -121,7 +121,7 @@ const renderModal = (state, elements) => {
 };
 
 export default (state, i18nextInstance, elements) => (path, value) => {
-  if (path === 'form.process') {
+  if (path === 'form.status') {
     if (value === 'failed') {
       renderError(state, elements);
     }
