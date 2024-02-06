@@ -24,7 +24,7 @@ const state = {
     isValid: true,
   },
   loadingProcess: {
-    process: 'loading',
+    status: 'loading',
     error: '',
   },
   ui: {
@@ -48,7 +48,7 @@ const generateSchema = () => {
 
 const checkForNewPosts = (watchedState, i18nextInstance) => {
   const { form, feeds, loadingProcess } = watchedState;
-  loadingProcess.process = 'loading';
+  loadingProcess.status = 'loading';
   const promises = feeds.map((feed) => axios.get(buildUrl(feed.url), axiosConfig)
     .then((response) => response));
   const requests = Promise.all(promises);
@@ -63,7 +63,7 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
     const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
     form.isValid = false;
     loadingProcess.error = i18nextInstance.t(message);
-    loadingProcess.process = 'failed';
+    loadingProcess.status = 'failed';
   });
   if (form.status !== 'failed') {
     setTimeout(() => checkForNewPosts(watchedState, i18nextInstance), 5000);
@@ -88,13 +88,13 @@ export default (() => {
       generateSchema().validate({ url }).then(() => {
         watchedState.form.error = '';
         watchedState.form.isValid = true;
-        watchedState.loadingProcess.process = 'loading';
+        watchedState.loadingProcess.status = 'loading';
         axios.get(buildUrl(url), axiosConfig)
           .then((response) => {
             const { feed, posts } = parse(response.data.contents);
             feed.id = state.feeds.length + 1;
             feed.url = url;
-            watchedState.loadingProcess.process = 'succsess';
+            watchedState.loadingProcess.status = 'succsess';
             watchedState.form.status = 'filling';
             watchedState.feeds.unshift(feed);
             watchedState.posts.unshift(...posts);
@@ -103,7 +103,7 @@ export default (() => {
           .catch((e) => {
             const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
             watchedState.loadingProcess.error = i18nextInstance.t(message);
-            watchedState.loadingProcess.process = 'failed';
+            watchedState.loadingProcess.status = 'failed';
           });
       })
         .catch((e) => {

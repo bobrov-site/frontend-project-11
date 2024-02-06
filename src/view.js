@@ -129,7 +129,7 @@ export default (state, i18nextInstance, elements) => (path, value) => {
       renderLoadingForm(elements);
     }
   }
-  if (path === 'loadingProcess.process') {
+  if (path === 'loadingProcess.status') {
     if (value === 'succsess') {
       renderFeedback(state, i18nextInstance, elements);
     }
