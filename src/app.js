@@ -50,21 +50,25 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
   const { form, feeds, loadingProcess } = watchedState;
   loadingProcess.status = 'loading';
   const promises = feeds.map((feed) => axios.get(buildUrl(feed.url), axiosConfig)
-    .then((response) => response));
+    .then((response) => response)
+    .catch((e) => e));
   const requests = Promise.all(promises);
-  requests.then((responses) => {
-    responses.forEach((response) => {
-      const { posts } = parse(response.data.contents);
-      const newPosts = posts
-        .filter((post) => !watchedState.posts.some((item) => item.title === post.title));
-      watchedState.posts.unshift(...newPosts);
+  requests
+    .then((responses) => {
+      responses.forEach((response) => {
+        const { posts } = parse(response.data.contents);
+        const newPosts = posts
+          .filter((post) => !watchedState.posts.some((item) => item.title === post.title));
+        watchedState.posts.unshift(...newPosts);
+      });
+    })
+    .catch((e) => {
+      if (e.message === 'Network Error') {
+        form.isValid = false;
+        loadingProcess.error = i18nextInstance.t('errorNetwork');
+        loadingProcess.status = 'failed';
+      }
     });
-  }).catch((e) => {
-    const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
-    form.isValid = false;
-    loadingProcess.error = i18nextInstance.t(message);
-    loadingProcess.status = 'failed';
-  });
   if (form.status !== 'failed') {
     setTimeout(() => checkForNewPosts(watchedState, i18nextInstance), 5000);
   }
