@@ -1,7 +1,7 @@
 const renderError = (state, elements) => {
   const { feedback, input, sendButton } = elements;
-  const { form } = state;
-  feedback.textContent = form.error;
+  const { form, loadingProcess } = state;
+  feedback.textContent = form.error ? form.error : loadingProcess.error;
   feedback.classList.add('text-danger');
   input.classList.add('is-invalid');
   input.removeAttribute('disabled');

@@ -62,7 +62,7 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
   }).catch((e) => {
     const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
     form.isValid = false;
-    form.error = i18nextInstance.t(message);
+    loadingProcess.error = i18nextInstance.t(message);
     loadingProcess.process = 'failed';
   });
   if (form.process !== 'failed') {
@@ -102,10 +102,8 @@ export default (() => {
           })
           .catch((e) => {
             const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
-            // watchedState.form.isValid = false;
             watchedState.loadingProcess.error = i18nextInstance.t(message);
             watchedState.loadingProcess.process = 'failed';
-            // watchedState.form.process = 'failed';
           });
       })
         .catch((e) => {
