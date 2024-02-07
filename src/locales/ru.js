@@ -6,6 +6,7 @@ export default {
     errorBadRequest: 'Ресурс указан неверно',
     errorResourceNotValid: 'Ресурс не содержит валидный RSS',
     errorNetwork: 'Ошибка сети',
+    errorUnknown: 'Неизвестная ошибка',
     successAdd: 'RSS успешно загружен',
     feedsTitle: 'Фиды',
     postsTitle: 'Посты',
