@@ -3,7 +3,7 @@ const parse = (data) => {
   const document = parser.parseFromString(data, 'application/xml');
   const rss = document.querySelector('rss');
   if (!document.contains(rss)) {
-    throw new Error('errowResourceNotValid');
+    throw new Error('Rss not valid');
   }
   const feed = {};
   feed.title = rss.querySelector('title').textContent;
