@@ -39,13 +39,24 @@ const axiosConfig = {
   timeout: 10000,
 };
 
+const extractLoadingErrorMessage = (error) => {
+  switch (error) {
+    case 'Network Error':
+      return 'errorNetwork';
+    case 'Rss not valid':
+      return 'errorReso urceNotValid';
+    default:
+      return 'errorUnknown';
+  }
+};
+
 const generateSchema = () => {
   const urlsList = state.feeds.map((feed) => feed.url);
   return yup.string().url('errorWrongLink').required('errorRequired').notOneOf(urlsList, 'errorNowUnique');
 };
 
 const checkForNewPosts = (watchedState, i18nextInstance) => {
-  const { form, feeds, loadingProcess } = watchedState;
+  const { feeds, loadingProcess } = watchedState;
   loadingProcess.status = 'loading';
   const promises = feeds.map((feed) => axios.get(buildUrl(feed.url), axiosConfig)
     .then((response) => response)
@@ -64,11 +75,9 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
       setTimeout(() => checkForNewPosts(watchedState, i18nextInstance), 5000);
     })
     .catch((e) => {
-      if (e.message === 'Network Error') {
-        form.isValid = false;
-        loadingProcess.error = i18nextInstance.t('errorNetwork');
-        loadingProcess.status = 'failed';
-      }
+      const message = extractLoadingErrorMessage(e.message);
+      loadingProcess.error = i18nextInstance.t(message);
+      loadingProcess.status = 'failed';
     });
 };
 
@@ -86,7 +95,7 @@ const loading = (watchedState, i18nextInstance, url) => {
       checkForNewPosts(watchedState, i18nextInstance);
     })
     .catch((e) => {
-      const message = e.message === 'Network Error' ? 'errorNetwork' : 'errorResourceNotValid';
+      const message = extractLoadingErrorMessage(e.message);
       loadingProcess.error = i18nextInstance.t(message);
       loadingProcess.status = 'failed';
     });
