@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 const parse = (data) => {
   const parser = new DOMParser();
   const document = parser.parseFromString(data, 'application/xml');
@@ -17,7 +19,7 @@ const parse = (data) => {
     post.title = title.textContent;
     post.link = link.textContent;
     post.description = description.textContent;
-    post.id = Date.now() + Math.floor(Math.random() * 1000);
+    post.id = _.uniqueId();
     return post;
   });
   return { feed, posts };
