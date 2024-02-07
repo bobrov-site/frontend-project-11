@@ -44,7 +44,7 @@ const extractLoadingErrorMessage = (error) => {
     case 'Network Error':
       return 'errorNetwork';
     case 'Rss not valid':
-      return 'errorReso urceNotValid';
+      return 'errorResourceNotValid';
     default:
       return 'errorUnknown';
   }
