@@ -81,6 +81,12 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
     });
 };
 
+const setFeedId = (post, feedId) => {
+  const updatedPost = post;
+  updatedPost.feedId = feedId;
+  return post;
+};
+
 const loading = (watchedState, i18nextInstance, url) => {
   const { loadingProcess } = watchedState;
   loadingProcess.status = 'loading';
@@ -89,9 +95,10 @@ const loading = (watchedState, i18nextInstance, url) => {
       const { feed, posts } = parse(response.data.contents);
       feed.id = state.feeds.length + 1;
       feed.url = url;
+      const relatedPosts = posts.map((post) => setFeedId(post, feed.id));
       loadingProcess.status = 'succsess';
       watchedState.feeds.unshift(feed);
-      watchedState.posts.unshift(...posts);
+      watchedState.posts.unshift(...relatedPosts);
       checkForNewPosts(watchedState, i18nextInstance);
     })
     .catch((e) => {
