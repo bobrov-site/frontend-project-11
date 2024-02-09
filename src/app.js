@@ -59,25 +59,21 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
   const { feeds, loadingProcess } = watchedState;
   loadingProcess.status = 'loading';
   const promises = feeds.map((feed) => axios.get(buildUrl(feed.url), axiosConfig)
-    .then((response) => response)
-    .catch((e) => e));
-  const requests = Promise.all(promises);
-  requests
-    .then((responses) => {
-      responses.forEach((response) => {
-        const { posts } = parse(response.data.contents);
-        const newPosts = posts
-          .filter((post) => !watchedState.posts.some((item) => item.title === post.title));
-        watchedState.posts.unshift(...newPosts);
-      });
-    })
-    .then(() => {
-      setTimeout(() => checkForNewPosts(watchedState, i18nextInstance), 5000);
+    .then((response) => {
+      const { posts } = parse(response.data.contents);
+      const newPosts = posts
+        .filter((post) => !watchedState.posts.some((item) => item.title === post.title));
+      watchedState.posts.unshift(...newPosts);
     })
     .catch((e) => {
       const message = extractLoadingErrorMessage(e.message);
       loadingProcess.error = i18nextInstance.t(message);
       loadingProcess.status = 'failed';
+    }));
+  const requests = Promise.all(promises);
+  requests
+    .then(() => {
+      setTimeout(() => checkForNewPosts(watchedState, i18nextInstance), 5000);
     });
 };
 
