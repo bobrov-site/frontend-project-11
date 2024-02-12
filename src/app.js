@@ -65,8 +65,7 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
       loadingProcess.error = i18nextInstance.t(message);
       loadingProcess.status = 'failed';
     }));
-  const requests = Promise.all(promises);
-  requests
+  Promise.all(promises)
     .then(() => {
       setTimeout(() => checkForNewPosts(watchedState, i18nextInstance), 5000);
     });
@@ -101,7 +100,8 @@ const loading = (watchedState, i18nextInstance, url) => {
 
 const validate = (url, urls) => {
   const schema = yup.string().url('errorWrongLink').required('errorRequired').notOneOf(urls, 'errorNowUnique');
-  return schema.validate(url)
+  return schema
+    .validate(url)
     .then(() => { })
     .catch((e) => e.message);
 };
