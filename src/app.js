@@ -5,7 +5,7 @@ import i18next from 'i18next';
 import view from './view.js';
 import ru from './locales/ru.js';
 import parse from './parse.js';
-import buildUrl from './helpers/buildUrl.js';
+import buildUrl from './helpers.js';
 
 const elements = {
   form: document.querySelector('.rss-form'),
@@ -51,6 +51,7 @@ const extractLoadingErrorMessage = (error) => {
 };
 
 const checkForNewPosts = (watchedState, i18nextInstance) => {
+  const delay = 5000; 
   const { feeds, loadingProcess } = watchedState;
   loadingProcess.status = 'loading';
   const promises = feeds.map((feed) => axios.get(buildUrl(feed.url), axiosConfig)
@@ -67,7 +68,7 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
     }));
   Promise.all(promises)
     .then(() => {
-      setTimeout(() => checkForNewPosts(watchedState, i18nextInstance), 5000);
+      setTimeout(() => checkForNewPosts(watchedState, i18nextInstance), delay);
     });
 };
 
@@ -117,8 +118,9 @@ export default (() => {
     elements.form.addEventListener('submit', ((event) => {
       event.preventDefault();
       watchedState.form.status = 'processing';
-      const data = new FormData(event.target);
-      const url = data.get('url');
+      // const data = new FormData(event.target);
+      // const url = data.get('url');
+      const url = elements.input.value;
       const urls = watchedState.feeds.map((feed) => feed.url);
       validate(url, urls).then((error) => {
         if (error) {
