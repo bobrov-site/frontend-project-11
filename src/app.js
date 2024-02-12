@@ -2,6 +2,7 @@ import onChange from 'on-change';
 import axios from 'axios';
 import * as yup from 'yup';
 import i18next from 'i18next';
+import * as _ from 'lodash';
 import view from './view.js';
 import ru from './locales/ru.js';
 import parse from './parse.js';
@@ -78,7 +79,7 @@ const loading = (watchedState, i18nextInstance, url) => {
   axios.get(buildUrl(url), axiosConfig)
     .then((response) => {
       const { feed, posts } = parse(response.data.contents);
-      feed.id = state.feeds.length + 1;
+      feed.id = _.uniqueId();
       feed.url = url;
       const relatedPosts = posts.map((post) => ({
         ...post,
@@ -136,8 +137,8 @@ export default (() => {
     }));
     elements.postsColumn.addEventListener('click', (event) => {
       if (event.target.dataset.id) {
-        const openedPost = state.posts.find((post) => post.id === Number(event.target.dataset.id));
-        watchedState.ui.id = Number(event.target.dataset.id);
+        const openedPost = state.posts.find((post) => post.id === event.target.dataset.id);
+        watchedState.ui.id = event.target.dataset.id;
         watchedState.ui.seenPosts.add(openedPost);
       }
     });
