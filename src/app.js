@@ -117,18 +117,19 @@ export default (() => {
     elements.form.addEventListener('submit', ((event) => {
       event.preventDefault();
       watchedState.form.status = 'processing';
-      const url = elements.input.value;
+      const data = new FormData(event.target);
+      const url = data.get('url');
       const urls = watchedState.feeds.map((feed) => feed.url);
       validate(url, urls).then((error) => {
         if (error) {
           watchedState.form.isValid = false;
           watchedState.form.error = i18nextInstance.t(error);
           watchedState.form.status = 'failed';
-        } else {
-          watchedState.form.error = '';
-          watchedState.form.isValid = true;
-          loading(watchedState, i18nextInstance, url);
+          return;
         }
+        watchedState.form.error = '';
+        watchedState.form.isValid = true;
+        loading(watchedState, i18nextInstance, url);
       });
     }));
     elements.postsColumn.addEventListener('click', (event) => {
