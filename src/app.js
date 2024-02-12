@@ -52,7 +52,7 @@ const extractLoadingErrorMessage = (error) => {
 };
 
 const checkForNewPosts = (watchedState, i18nextInstance) => {
-  const delay = 5000; 
+  const delay = 5000;
   const { feeds, loadingProcess } = watchedState;
   loadingProcess.status = 'loading';
   const promises = feeds.map((feed) => axios.get(buildUrl(feed.url), axiosConfig)
