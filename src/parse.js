@@ -19,7 +19,7 @@ const parse = (data) => {
     post.title = title.textContent;
     post.link = link.textContent;
     post.description = description.textContent;
-    post.id = Number(_.uniqueId());
+    post.id = _.uniqueId();
     return post;
   });
   return { feed, posts };
