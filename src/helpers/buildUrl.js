@@ -1,1 +1,6 @@
-export default (url) => `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`;
+export default (originalUrl) => {
+    const url = new URL('https://allorigins.hexlet.app/get');
+    url.searchParams.set('disableCache', true);
+    url.searchParams.set('url', originalUrl);
+    return url.href;
+};
