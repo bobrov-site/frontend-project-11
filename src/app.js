@@ -50,11 +50,6 @@ const extractLoadingErrorMessage = (error) => {
   }
 };
 
-const generateSchema = () => {
-  const urlsList = state.feeds.map((feed) => feed.url);
-  return yup.string().url('errorWrongLink').required('errorRequired').notOneOf(urlsList, 'errorNowUnique');
-};
-
 const checkForNewPosts = (watchedState, i18nextInstance) => {
   const { feeds, loadingProcess } = watchedState;
   loadingProcess.status = 'loading';
@@ -104,9 +99,12 @@ const loading = (watchedState, i18nextInstance, url) => {
     });
 };
 
-const validate = (url) => generateSchema().validate(url)
-  .then(() => { })
-  .catch((e) => e.message);
+const validate = (url, urls) => {
+  const schema = yup.string().url('errorWrongLink').required('errorRequired').notOneOf(urls, 'errorNowUnique');
+  return schema.validate(url)
+    .then(() => { })
+    .catch((e) => e.message);
+};
 
 export default (() => {
   const i18nextInstance = i18next.createInstance();
@@ -123,7 +121,8 @@ export default (() => {
       event.preventDefault();
       watchedState.form.status = 'processing';
       const url = elements.input.value;
-      validate(url).then((error) => {
+      const urls = watchedState.feeds.map((feed) => feed.url);
+      validate(url, urls).then((error) => {
         if (error) {
           watchedState.form.isValid = false;
           watchedState.form.error = i18nextInstance.t(error);
