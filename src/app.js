@@ -19,6 +19,14 @@ const elements = {
 };
 
 const state = {
+  errors: {
+    errorNetwork: 'errorNetwork',
+    errorResourceNotValid: 'errorResourceNotValid',
+    errorUnknown: 'errorUnknown',
+    errorWrongLink: 'errorWrongLink',
+    errorRequired: 'errorRequired',
+    errorNowUnique: 'errorNowUnique',
+  },
   form: {
     status: '',
     error: '',
