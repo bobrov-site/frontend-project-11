@@ -1,11 +1,13 @@
 import * as _ from 'lodash';
 
 const parse = (data) => {
+  const error = {};
   const parser = new DOMParser();
   const document = parser.parseFromString(data, 'application/xml');
   const rss = document.querySelector('rss');
   if (!document.contains(rss)) {
-    throw new Error('Rss not valid');
+    error.isParserError = true;
+    return { error };
   }
   const feed = {};
   feed.title = rss.querySelector('title').textContent;
@@ -22,7 +24,7 @@ const parse = (data) => {
     post.id = _.uniqueId();
     return post;
   });
-  return { feed, posts };
+  return { feed, posts, error };
 };
 
 export default parse;

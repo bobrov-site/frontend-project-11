@@ -41,14 +41,16 @@ const axiosConfig = {
 };
 
 const extractLoadingErrorMessage = (error) => {
-  switch (error) {
-    case 'Network Error':
-      return 'errorNetwork';
-    case 'Rss not valid':
-      return 'errorResourceNotValid';
-    default:
-      return 'errorUnknown';
+  if (error.isAxiosError) {
+    return 'errorNetwork';
   }
+  if (error.isValidationError) {
+    return error['message'];
+  }
+  if (error.isParserError) {
+    return 'errorResourceNotValid';
+  }
+  return 'errorUnknown';
 };
 
 const checkForNewPosts = (watchedState, i18nextInstance) => {
@@ -63,7 +65,7 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
       watchedState.posts.unshift(...newPosts);
     })
     .catch((e) => {
-      const message = extractLoadingErrorMessage(e.message);
+      const message = extractLoadingErrorMessage(e);
       loadingProcess.error = i18nextInstance.t(message);
       loadingProcess.status = 'failed';
     }));
@@ -78,7 +80,13 @@ const loading = (watchedState, i18nextInstance, url) => {
   loadingProcess.status = 'loading';
   axios.get(buildUrl(url), axiosConfig)
     .then((response) => {
-      const { feed, posts } = parse(response.data.contents);
+      const { feed, posts, error } = parse(response.data.contents);
+      if (Object.values(error).length !== 0) {
+        const message = extractLoadingErrorMessage(error);
+        loadingProcess.error = i18nextInstance.t(message);
+        loadingProcess.status = 'failed';
+        return;
+      }
       feed.id = _.uniqueId();
       feed.url = url;
       const relatedPosts = posts.map((post) => ({
@@ -91,7 +99,7 @@ const loading = (watchedState, i18nextInstance, url) => {
       checkForNewPosts(watchedState, i18nextInstance);
     })
     .catch((e) => {
-      const message = extractLoadingErrorMessage(e.message);
+      const message = extractLoadingErrorMessage(e);
       loadingProcess.error = i18nextInstance.t(message);
       loadingProcess.status = 'failed';
     });
@@ -102,7 +110,7 @@ const validate = (url, urls) => {
   return schema
     .validate(url)
     .then(() => { })
-    .catch((e) => e.message);
+    .catch((e) => e);
 };
 
 export default (() => {
@@ -125,8 +133,10 @@ export default (() => {
       const urls = watchedState.feeds.map((feed) => feed.url);
       validate(url, urls).then((error) => {
         if (error) {
+          error.isValidationError = true;
+          const message = extractLoadingErrorMessage(error);
           watchedState.form.isValid = false;
-          watchedState.form.error = i18nextInstance.t(error);
+          watchedState.form.error = i18nextInstance.t(message);
           watchedState.form.status = 'failed';
           return;
         }
