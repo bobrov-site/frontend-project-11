@@ -126,8 +126,6 @@ export default (() => {
     elements.form.addEventListener('submit', ((event) => {
       event.preventDefault();
       watchedState.form.status = 'processing';
-      // const data = new FormData(event.target);
-      // const url = data.get('url');
       const url = elements.input.value;
       const urls = watchedState.feeds.map((feed) => feed.url);
       validate(url, urls).then((error) => {
