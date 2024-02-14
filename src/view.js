@@ -1,7 +1,12 @@
 const renderError = (state, elements, i18nextInstance) => {
   const { feedback, input, sendButton } = elements;
   const { form, loadingProcess } = state;
-  feedback.textContent = form.error ? i18nextInstance.t(form.error) : i18nextInstance.t(loadingProcess.error);
+  if (form.error) {
+    feedback.textContent = i18nextInstance.t(form.error);
+  }
+  if (loadingProcess.error) {
+    feedback.textContent = i18nextInstance.t(loadingProcess.error);
+  }
   feedback.classList.add('text-danger');
   input.classList.add('is-invalid');
   input.removeAttribute('disabled');
@@ -132,7 +137,7 @@ export default (state, i18nextInstance, elements) => (path, value) => {
       resetForm(elements);
     }
     if (value === 'failed') {
-      renderError(state, elements);
+      renderError(state, elements, i18nextInstance);
     }
     if (value === 'processing') {
       renderLoadingForm(elements);

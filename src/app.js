@@ -114,7 +114,6 @@ const validate = (url, urls) => {
 
 export default (() => {
   const i18nextInstance = i18next.createInstance();
-  const watchedState = onChange(state, view(state, i18nextInstance, elements));
   i18nextInstance.init({
     debug: true,
     lng: 'ru',
@@ -122,6 +121,7 @@ export default (() => {
       ru,
     },
   }).then(() => {
+    const watchedState = onChange(state, view(state, i18nextInstance, elements));
     watchedState.form.status = 'filling';
     elements.form.addEventListener('submit', ((event) => {
       event.preventDefault();
