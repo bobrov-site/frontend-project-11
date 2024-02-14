@@ -1,7 +1,7 @@
-const renderError = (state, elements) => {
+const renderError = (state, elements, i18nextInstance) => {
   const { feedback, input, sendButton } = elements;
   const { form, loadingProcess } = state;
-  feedback.textContent = form.error ? form.error : loadingProcess.error;
+  feedback.textContent = form.error ? i18nextInstance.t(form.error) : i18nextInstance.t(loadingProcess.error);
   feedback.classList.add('text-danger');
   input.classList.add('is-invalid');
   input.removeAttribute('disabled');
@@ -143,7 +143,7 @@ export default (state, i18nextInstance, elements) => (path, value) => {
       renderFeedback(state, i18nextInstance, elements);
     }
     if (value === 'failed') {
-      renderError(state, elements);
+      renderError(state, elements, i18nextInstance);
     }
   }
   if (path === 'feeds') {

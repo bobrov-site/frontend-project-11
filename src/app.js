@@ -19,14 +19,6 @@ const elements = {
 };
 
 const state = {
-  errors: {
-    errorNetwork: 'errorNetwork',
-    errorResourceNotValid: 'errorResourceNotValid',
-    errorUnknown: 'errorUnknown',
-    errorWrongLink: 'errorWrongLink',
-    errorRequired: 'errorRequired',
-    errorNowUnique: 'errorNowUnique',
-  },
   form: {
     status: '',
     error: '',
@@ -61,7 +53,7 @@ const extractLoadingErrorMessage = (error) => {
   return 'errorUnknown';
 };
 
-const checkForNewPosts = (watchedState, i18nextInstance) => {
+const checkForNewPosts = (watchedState) => {
   const delay = 5000;
   const { feeds, loadingProcess } = watchedState;
   loadingProcess.status = 'loading';
@@ -74,16 +66,16 @@ const checkForNewPosts = (watchedState, i18nextInstance) => {
     })
     .catch((e) => {
       const message = extractLoadingErrorMessage(e);
-      loadingProcess.error = i18nextInstance.t(message);
+      loadingProcess.error = message;
       loadingProcess.status = 'failed';
     }));
   Promise.all(promises)
     .then(() => {
-      setTimeout(() => checkForNewPosts(watchedState, i18nextInstance), delay);
+      setTimeout(() => checkForNewPosts(watchedState), delay);
     });
 };
 
-const loading = (watchedState, i18nextInstance, url) => {
+const loading = (watchedState, url) => {
   const { loadingProcess } = watchedState;
   loadingProcess.status = 'loading';
   axios.get(buildUrl(url), axiosConfig)
@@ -91,7 +83,7 @@ const loading = (watchedState, i18nextInstance, url) => {
       const { feed, posts, error } = parse(response.data.contents);
       if (Object.values(error).length !== 0) {
         const message = extractLoadingErrorMessage(error);
-        loadingProcess.error = i18nextInstance.t(message);
+        loadingProcess.error = message;
         loadingProcess.status = 'failed';
         return;
       }
@@ -104,11 +96,10 @@ const loading = (watchedState, i18nextInstance, url) => {
       loadingProcess.status = 'succsess';
       watchedState.feeds.unshift(feed);
       watchedState.posts.unshift(...relatedPosts);
-      // checkForNewPosts(watchedState, i18nextInstance);
     })
     .catch((e) => {
       const message = extractLoadingErrorMessage(e);
-      loadingProcess.error = i18nextInstance.t(message);
+      loadingProcess.error = message;
       loadingProcess.status = 'failed';
     });
 };
@@ -144,13 +135,13 @@ export default (() => {
           const validationError = { ...error, isValidationError: true };
           const message = extractLoadingErrorMessage(validationError);
           watchedState.form.isValid = false;
-          watchedState.form.error = i18nextInstance.t(message);
+          watchedState.form.error = message;
           watchedState.form.status = 'failed';
           return;
         }
         watchedState.form.error = '';
         watchedState.form.isValid = true;
-        loading(watchedState, i18nextInstance, url);
+        loading(watchedState, url);
       });
     }));
     elements.postsColumn.addEventListener('click', (event) => {
@@ -160,6 +151,6 @@ export default (() => {
         watchedState.ui.seenPosts.add(id);
       }
     });
-    checkForNewPosts(watchedState, i18nextInstance);
+    checkForNewPosts(watchedState);
   });
 });
