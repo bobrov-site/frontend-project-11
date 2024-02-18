@@ -24,7 +24,6 @@ const state = {
   form: {
     status: '',
     error: '',
-    isValid: true,
   },
   loadingProcess: {
     status: '',
@@ -56,8 +55,7 @@ const extractLoadingErrorMessage = (error) => {
 };
 
 const checkForNewPosts = (watchedState) => {
-  const { feeds, loadingProcess } = watchedState;
-  loadingProcess.status = 'loading';
+  const { feeds } = watchedState;
   const promises = feeds.map((feed) => axios.get(buildUrl(feed.url), axiosConfig)
     .then((response) => {
       const { posts } = parse(response.data.contents);
@@ -73,7 +71,6 @@ const checkForNewPosts = (watchedState) => {
 
 const loading = (watchedState, url) => {
   const { loadingProcess } = watchedState;
-  loadingProcess.status = 'loading';
   axios.get(buildUrl(url), axiosConfig)
     .then((response) => {
       const { feed, posts, error } = parse(response.data.contents);
@@ -125,13 +122,11 @@ export default (() => {
       const urls = watchedState.feeds.map((feed) => feed.url);
       validate(url, urls).then((error) => {
         if (error) {
-          watchedState.form.isValid = false;
           watchedState.form.error = error.message;
           watchedState.form.status = 'failed';
           return;
         }
         watchedState.form.error = '';
-        watchedState.form.isValid = true;
         loading(watchedState, url);
       });
     }));
