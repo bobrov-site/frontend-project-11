@@ -121,10 +121,9 @@ const renderColumnPosts = (state, i18nextInstance, elements) => {
 const renderModal = (state, elements) => {
   const { modal } = elements;
   const { posts, ui } = state;
-  const container = modal;
-  const title = container.querySelector('.modal-title');
-  const description = container.querySelector('.modal-body');
-  const linkButton = container.querySelector('.modal-footer a');
+  const title = modal.querySelector('.modal-title');
+  const description = modal.querySelector('.modal-body');
+  const linkButton = modal.querySelector('.modal-footer a');
   const openedPost = posts.find((post) => post.id === ui.id);
   title.textContent = openedPost.title;
   description.textContent = openedPost.description;
