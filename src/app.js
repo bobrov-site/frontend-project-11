@@ -78,8 +78,7 @@ const loading = (watchedState, url) => {
     .then((response) => {
       const { feed, posts, error } = parse(response.data.contents);
       if (Object.values(error).length !== 0) {
-        const message = extractLoadingErrorMessage(error);
-        loadingProcess.error = message;
+        loadingProcess.error = extractLoadingErrorMessage(error);
         loadingProcess.status = 'failed';
         return;
       }
@@ -94,8 +93,7 @@ const loading = (watchedState, url) => {
       watchedState.posts.unshift(...relatedPosts);
     })
     .catch((e) => {
-      const message = extractLoadingErrorMessage(e);
-      loadingProcess.error = message;
+      loadingProcess.error = extractLoadingErrorMessage(e);
       loadingProcess.status = 'failed';
     });
 };
@@ -128,9 +126,8 @@ export default (() => {
       validate(url, urls).then((error) => {
         if (error) {
           const validationError = { ...error, isValidationError: true };
-          const message = extractLoadingErrorMessage(validationError);
           watchedState.form.isValid = false;
-          watchedState.form.error = message;
+          watchedState.form.error = extractLoadingErrorMessage(validationError);
           watchedState.form.status = 'failed';
           return;
         }
