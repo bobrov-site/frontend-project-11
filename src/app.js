@@ -8,6 +8,8 @@ import ru from './locales/ru.js';
 import parse from './parse.js';
 import buildUrl from './helpers.js';
 
+const delay = 5000;
+
 const elements = {
   form: document.querySelector('.rss-form'),
   input: document.getElementById('url-input'),
@@ -54,7 +56,6 @@ const extractLoadingErrorMessage = (error) => {
 };
 
 const checkForNewPosts = (watchedState) => {
-  const delay = 5000;
   const { feeds, loadingProcess } = watchedState;
   loadingProcess.status = 'loading';
   const promises = feeds.map((feed) => axios.get(buildUrl(feed.url), axiosConfig)
