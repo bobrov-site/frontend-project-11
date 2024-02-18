@@ -125,9 +125,8 @@ export default (() => {
       const urls = watchedState.feeds.map((feed) => feed.url);
       validate(url, urls).then((error) => {
         if (error) {
-          const validationError = { ...error, isValidationError: true };
           watchedState.form.isValid = false;
-          watchedState.form.error = extractLoadingErrorMessage(validationError);
+          watchedState.form.error = error.message;
           watchedState.form.status = 'failed';
           return;
         }
