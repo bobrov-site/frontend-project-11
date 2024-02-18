@@ -92,13 +92,14 @@ const renderColumnPosts = (state, i18nextInstance, elements) => {
     const item = document.createElement('li');
     const link = document.createElement('a');
     const button = document.createElement('button');
+    const classes = ['list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0'];
     button.textContent = i18nextInstance.t('postButton');
     button.setAttribute('type', 'button');
     button.dataset.id = post.id;
     button.dataset.bsToggle = 'modal';
     button.dataset.bsTarget = '#modalWindow';
     button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
-    item.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+    item.classList.add(...classes);
     if (ui.seenPosts.has(post.id)) {
       link.classList.add('fw-normal', 'link-secondary');
       link.classList.remove('fw-bold');
