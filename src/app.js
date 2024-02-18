@@ -64,11 +64,6 @@ const checkForNewPosts = (watchedState) => {
       const newPosts = posts
         .filter((post) => !watchedState.posts.some((item) => item.title === post.title));
       watchedState.posts.unshift(...newPosts);
-    })
-    .catch((e) => {
-      const message = extractLoadingErrorMessage(e);
-      loadingProcess.error = message;
-      loadingProcess.status = 'failed';
     }));
   Promise.all(promises)
     .then(() => {
