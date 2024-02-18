@@ -1,31 +1,30 @@
-const renderError = (state, elements, i18nextInstance) => {
-  const { feedback, input, sendButton } = elements;
-  const { form, loadingProcess } = state;
-  if (form.error) {
-    feedback.textContent = i18nextInstance.t(form.error);
-  }
-  if (loadingProcess.error) {
-    feedback.textContent = i18nextInstance.t(loadingProcess.error);
-  }
-  feedback.classList.add('text-danger');
-  input.classList.add('is-invalid');
-  input.removeAttribute('disabled');
-  sendButton.removeAttribute('disabled');
-};
-
-const renderLoadingForm = (elements) => {
-  const { input, sendButton, feedback } = elements;
-  input.setAttribute('disabled', '');
-  sendButton.setAttribute('disabled', '');
-  feedback.textContent = '';
-  feedback.classList.remove('text-danger');
-  input.classList.remove('is-invalid');
-};
-
-const renderFeedback = (state, i18nextInstance, elements) => {
-  const { feedback, input, sendButton } = elements;
+const renderForm = (state, elements, i18nextInstance, value) => {
   const { form } = state;
-  if (form.isValid) {
+  const { input, sendButton, feedback } = elements;
+  if (value === 'processing') {
+    input.setAttribute('disabled', '');
+    sendButton.setAttribute('disabled', '');
+    feedback.textContent = '';
+    feedback.classList.remove('text-danger');
+    input.classList.remove('is-invalid');
+  }
+  if (value === 'failed') {
+    feedback.textContent = i18nextInstance.t(form.error);
+    feedback.classList.add('text-danger');
+    input.classList.add('is-invalid');
+    input.removeAttribute('disabled');
+    sendButton.removeAttribute('disabled');
+  }
+  if (value === 'filling') {
+    input.value = '';
+    input.focus();
+  }
+};
+
+const renderLoadingProcess = (state, elements, i18nextInstance, value) => {
+  const { loadingProcess } = state;
+  const { feedback, input, sendButton } = elements;
+  if (value === 'succsess') {
     feedback.textContent = i18nextInstance.t('successAdd');
     sendButton.removeAttribute('disabled');
     input.removeAttribute('disabled');
@@ -34,12 +33,13 @@ const renderFeedback = (state, i18nextInstance, elements) => {
     input.value = '';
     input.focus();
   }
-};
-
-const resetForm = (elements) => {
-  const { input } = elements;
-  input.value = '';
-  input.focus();
+  if (value === 'failed') {
+    feedback.textContent = i18nextInstance.t(loadingProcess.error);
+    feedback.classList.add('text-danger');
+    input.classList.add('is-invalid');
+    input.removeAttribute('disabled');
+    sendButton.removeAttribute('disabled');
+  }
 };
 
 const createContentCard = (title) => {
@@ -132,23 +132,10 @@ const renderModal = (state, elements) => {
 
 export default (state, i18nextInstance, elements) => (path, value) => {
   if (path === 'form.status') {
-    if (value === 'filling') {
-      resetForm(elements);
-    }
-    if (value === 'failed') {
-      renderError(state, elements, i18nextInstance);
-    }
-    if (value === 'processing') {
-      renderLoadingForm(elements);
-    }
+    renderForm(state, elements, i18nextInstance, value);
   }
   if (path === 'loadingProcess.status') {
-    if (value === 'succsess') {
-      renderFeedback(state, i18nextInstance, elements);
-    }
-    if (value === 'failed') {
-      renderError(state, elements, i18nextInstance);
-    }
+    renderLoadingProcess(state, elements, i18nextInstance, value);
   }
   if (path === 'feeds') {
     renderColumnFeed(state, i18nextInstance, elements);
