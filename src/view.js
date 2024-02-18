@@ -15,10 +15,6 @@ const renderForm = (state, elements, i18nextInstance, value) => {
     input.removeAttribute('disabled');
     sendButton.removeAttribute('disabled');
   }
-  if (value === 'filling') {
-    input.value = '';
-    input.focus();
-  }
 };
 
 const renderLoadingProcess = (state, elements, i18nextInstance, value) => {

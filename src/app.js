@@ -113,7 +113,6 @@ export default (() => {
     },
   }).then(() => {
     const watchedState = onChange(state, view(state, i18nextInstance, elements));
-    watchedState.form.status = 'filling';
     elements.form.addEventListener('submit', ((event) => {
       event.preventDefault();
       const data = new FormData(event.target);
