@@ -10,16 +10,6 @@ import buildUrl from './helpers.js';
 
 const delay = 5000;
 
-const elements = {
-  form: document.querySelector('.rss-form'),
-  input: document.getElementById('url-input'),
-  feedback: document.querySelector('.feedback'),
-  sendButton: document.querySelector('[type="submit"]'),
-  feedsColumn: document.querySelector('.feeds'),
-  postsColumn: document.querySelector('.posts'),
-  modal: document.querySelector('.modal'),
-};
-
 const state = {
   form: {
     status: '',
@@ -104,6 +94,15 @@ const validate = (url, urls) => {
 };
 
 export default (() => {
+  const elements = {
+    form: document.querySelector('.rss-form'),
+    input: document.getElementById('url-input'),
+    feedback: document.querySelector('.feedback'),
+    sendButton: document.querySelector('[type="submit"]'),
+    feedsColumn: document.querySelector('.feeds'),
+    postsColumn: document.querySelector('.posts'),
+    modal: document.querySelector('.modal'),
+  };
   const i18nextInstance = i18next.createInstance();
   i18nextInstance.init({
     debug: true,
