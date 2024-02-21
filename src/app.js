@@ -52,7 +52,8 @@ const checkForNewPosts = (watchedState) => {
       const newPosts = posts
         .filter((post) => !watchedState.posts.some((item) => item.title === post.title));
       watchedState.posts.unshift(...newPosts);
-    }));
+    })
+    .catch(() => {}));
   Promise.all(promises)
     .then(() => {
       setTimeout(() => checkForNewPosts(watchedState), delay);
