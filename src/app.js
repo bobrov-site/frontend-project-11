@@ -73,7 +73,6 @@ const loading = (watchedState, url) => {
       watchedState.posts.unshift(...relatedPosts);
     })
     .catch((e) => {
-      e.isParserError = true;
       loadingProcess.error = extractLoadingErrorMessage(e);
       loadingProcess.status = 'failed';
     });
