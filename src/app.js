@@ -35,9 +35,6 @@ const extractLoadingErrorMessage = (error) => {
   if (error.isAxiosError) {
     return 'errorNetwork';
   }
-  if (error.isValidationError) {
-    return error.message;
-  }
   if (error.isParserError) {
     return 'errorResourceNotValid';
   }
@@ -64,12 +61,7 @@ const loading = (watchedState, url) => {
   const { loadingProcess } = watchedState;
   axios.get(buildUrl(url), axiosConfig)
     .then((response) => {
-      const { feed, posts, error } = parse(response.data.contents);
-      if (Object.values(error).length !== 0) {
-        loadingProcess.error = extractLoadingErrorMessage(error);
-        loadingProcess.status = 'failed';
-        return;
-      }
+      const { feed, posts } = parse(response.data.contents);
       feed.id = _.uniqueId();
       feed.url = url;
       const relatedPosts = posts.map((post) => ({
@@ -81,6 +73,7 @@ const loading = (watchedState, url) => {
       watchedState.posts.unshift(...relatedPosts);
     })
     .catch((e) => {
+      e.isParserError = true;
       loadingProcess.error = extractLoadingErrorMessage(e);
       loadingProcess.status = 'failed';
     });
